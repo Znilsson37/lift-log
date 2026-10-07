@@ -789,7 +789,7 @@ var BUILTIN_FOODS = [
     var h = '';
     if(groups.local.length) h += '<h3>Built-in &amp; My foods</h3>' + groups.local.map(function(it, i){ return resultBtn(it, i, 'local'); }).join('');
     if(sstate.off === 'loading') h += '<div class="spin">Searching Open Food Facts…</div>';
-    else if(sstate.off === 'error') h += '<div class="warnbox small">Open Food Facts didn’t respond (you may be offline, or it’s busy). Built-in foods and My foods still work. Try again shortly, or tap Search USDA.</div>';
+    else if(sstate.off === 'error') h += '<div class="warnbox small">Open Food Facts didn’t respond (you may be offline, or it’s busy). Built-in foods and My foods still work. Try again shortly, or tap Search USDA. <button type="button" class="secondary" id="offRetry" style="margin-top:8px;width:100%">Retry Open Food Facts</button></div>';
     if(groups.off.length) h += '<h3>Open Food Facts (packaged &amp; branded)</h3>' + groups.off.map(function(it, i){ return resultBtn(it, i, 'off'); }).join('');
     else if(sstate.off === 'done') h += '<div class="muted small">No Open Food Facts matches with nutrition data.</div>';
     if(sstate.usda === 'loading') h += '<div class="spin">Searching USDA…</div>';
@@ -797,6 +797,7 @@ var BUILTIN_FOODS = [
     if(groups.usda.length) h += '<h3>USDA FoodData Central (generic foods)</h3>' + groups.usda.map(function(it, i){ return resultBtn(it, i, 'usda'); }).join('');
     $('fResults').innerHTML = h;
     $('fResults').querySelectorAll('.res').forEach(function(b){ b.onclick = function(){ openSheet(groups[b.getAttribute('data-g')][+b.getAttribute('data-i')]); }; });
+    var rt = $('offRetry'); if(rt) rt.onclick = function(){ $('fSearchForm').requestSubmit ? $('fSearchForm').requestSubmit() : $('fSearchForm').onsubmit(new Event('submit')); };
   }
   function fetchJSON(u, ms){
     var ctl = window.AbortController ? new AbortController() : null, t = setTimeout(function(){ if(ctl) ctl.abort(); }, ms || 12000);
@@ -818,11 +819,16 @@ var BUILTIN_FOODS = [
   var OFF_FIELDS = 'code,product_name,product_name_en,brands,nutriments,serving_size,serving_quantity';
   function offSearch(q){
     var u = function(h){ return 'https://' + h + '.openfoodfacts.org/cgi/search.pl?search_terms=' + encodeURIComponent(q) + '&search_simple=1&action=process&json=1&page_size=20&fields=' + OFF_FIELDS; };
-    return fetchJSON(u('us')).catch(function(){ return fetchJSON(u('world')); }).then(function(d){ return (d.products || []).map(fromOFF).filter(Boolean); });
+    var key = q.toLowerCase(); if(offCache[key]) return Promise.resolve(offCache[key]);
+    var wait = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
+    /* OFF search is rate-limited and sometimes answers 503 without CORS headers: try us, then world, then us again after a pause */
+    return fetchJSON(u('us'), 15000).catch(function(){ return fetchJSON(u('world'), 15000); }).catch(function(){ return wait(2000).then(function(){ return fetchJSON(u('us'), 15000); }); })
+      .then(function(d){ var r = (d.products || []).map(fromOFF).filter(Boolean); offCache[key] = r; return r; });
   }
+  var offCache = {};
   function offBarcode(code){
     var u = function(h){ return 'https://' + h + '.openfoodfacts.org/api/v2/product/' + encodeURIComponent(code) + '.json?fields=' + OFF_FIELDS; };
-    return fetchJSON(u('world')).catch(function(){ return fetchJSON(u('us')); }).then(function(d){ return d && d.status === 1 ? fromOFF(d.product) : null; });
+    return fetchJSON(u('world'), 15000).catch(function(){ return fetchJSON(u('us'), 15000); }).then(function(d){ return d && d.status === 1 ? fromOFF(d.product) : null; });
   }
   function fromUSDA(f){
     var get = function(ids, unit){ var x = (f.foodNutrients || []).filter(function(n){ return ids.indexOf(+n.nutrientId) !== -1 && (!unit || String(n.unitName).toUpperCase() === unit) && n.value != null; })[0]; return x ? num(x.value) : null; };
@@ -841,7 +847,7 @@ var BUILTIN_FOODS = [
     ev.preventDefault(); var q = $('fQuery').value.trim(); if(!q) return; lastQ = q;
     if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
     groups = {local: localMatches(q), off: [], usda: []}; sstate = {off:'loading'}; renderResults();
-    offSearch(q).then(function(r){ if(lastQ !== q) return; groups.off = r; sstate.off = 'done'; renderResults(); }, function(){ if(lastQ !== q) return; sstate.off = 'error'; renderResults(); });
+    offSearch(q).then(function(r){ if(lastQ !== q) return; groups.off = r; sstate.off = 'done'; renderResults(); }, function(){ if(lastQ !== q) return; sstate.off = 'error'; renderResults(); if(!groups.usda.length && sstate.usda !== 'loading') $('fUsdaBtn').click(); /* automatic fallback */ });
   };
   $('fQuery').addEventListener('input', function(){ var q = this.value.trim(); lastQ = ''; if(q.length >= 2){ groups = {local: localMatches(q), off: [], usda: []}; sstate = {}; renderResults(); } else $('fResults').innerHTML = ''; });
   $('fUsdaBtn').onclick = function(){
