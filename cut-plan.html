@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>12-Week Cut — Macro Tracker</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2332;--card2:#141c28;--border:#2d3a4d;--text:#e8eef6;--muted:#a7b6c6;--accent:#4aa3f5;--good:#3ecf8e;--warn:#f0b429;--danger:#f07178}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:var(--accent)}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#0a0e14;border-bottom:1px solid var(--border)}
+.topnav a{flex:1 1 22%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
+.topnav a.active{border-color:var(--accent);background:#1d3350;color:#fff;font-weight:600}
+.wrap{max-width:1040px;margin:0 auto;padding:12px}
+h1{font-size:1.35rem;margin:6px 0 4px;line-height:1.25}
+h2{font-size:1.12rem;margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:14px 0 6px;color:#c3d3e6}
+p{margin:.5em 0}
+.muted{color:var(--muted);font-size:.9rem}
+.small{font-size:.82rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
+.assume{background:#1c2838;border-left:4px solid var(--warn);padding:10px 12px;margin:12px 0;border-radius:0 10px 10px 0;font-size:.9rem}
+.disclaimer{background:#2a1a1c;border:1px solid #5a3038;border-radius:12px;padding:12px;margin:12px 0;font-size:.9rem}
+.disclaimer strong{color:var(--danger)}
+details.disclaimer summary,details.card summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{font:inherit;font-size:16px;width:100%;min-height:44px;background:#111923;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+textarea{min-height:84px}
+button,.btn{font:inherit;font-size:1rem;min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;touch-action:manipulation}
+button.secondary{background:#2a3548}
+button.danger{background:#8b3a42}
+button.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+button.on{background:var(--good);color:#06120c}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.toolbar>button{flex:1 1 auto}
+.grid{display:grid;gap:10px;grid-template-columns:1fr}
+.g2{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.g2>*,.grid>*{min-width:0}
+.sticky{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.97);border-bottom:1px solid var(--border);padding:8px 12px;margin:0 -12px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.badge{display:inline-block;font-size:.72rem;padding:2px 7px;border-radius:5px;background:#243044;color:#a8c4e0;margin:0 4px 4px 0}
+.badge.otc{background:#1a3a2a;color:#7ddea8}.badge.rx{background:#3a2a1a;color:#f0c070}.badge.no{background:#3a1a1a;color:#f0a0a0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.4rem;color:var(--good);line-height:1.2}
+.bars{display:flex;align-items:flex-end;gap:3px;height:90px;margin:8px 0}
+.bars i{flex:1;display:block;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.bars.green i{background:var(--good)}
+.warnbox{background:#2b2410;border:1px solid #6b5520;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.okbox{background:#10291d;border:1px solid #1f6b47;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.chk{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:6px 0;cursor:pointer}
+.chk input{width:26px;height:26px;min-height:26px;flex:0 0 26px;margin:2px 0 0}
+table.resp{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0}
+table.resp th,table.resp td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+table.resp th{background:var(--card2)}
+footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
+@media (max-width:640px){
+  table.resp thead{display:none}
+  table.resp,table.resp tbody,table.resp tr,table.resp td{display:block;width:100%}
+  table.resp tr{border:1px solid var(--border);border-radius:10px;margin:8px 0;padding:4px 12px;background:var(--card2)}
+  table.resp td{border:0;border-bottom:1px solid #222d3c;display:flex;justify-content:space-between;gap:12px;padding:8px 0;text-align:right}
+  table.resp td:last-child{border-bottom:0}
+  table.resp td::before{content:attr(data-label);color:var(--muted);font-size:.85rem;text-align:left;flex:0 0 auto}
+}
+@media (min-width:760px){
+  .wrap{padding:20px}
+  h1{font-size:1.6rem}
+  .topnav a{flex:0 1 auto;padding:6px 14px}
+  .grid.md2{grid-template-columns:1fr 1fr}
+  .grid.md3{grid-template-columns:repeat(3,1fr)}
+  .grid.md4{grid-template-columns:repeat(4,1fr)}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .sticky{margin:0 -20px;padding:8px 20px}
+}
+
+.day{padding:0}
+.day summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;min-height:52px;padding:10px 12px;cursor:pointer}
+.day summary::-webkit-details-marker{display:none}
+.day summary b{min-width:2.6em}
+.day .body{padding:0 12px 12px}
+.hit{margin-left:auto;font-weight:700}
+.hit.yes{color:var(--good)}.hit.no{color:var(--muted)}
+.tline{font-size:.8rem;color:var(--muted)}
+.weekpick{display:grid;grid-template-columns:52px 1fr 52px;gap:8px;align-items:center}
+.weekpick .lbl{text-align:center;font-size:.8rem;color:var(--muted);grid-column:1/-1;margin-top:-2px}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="workout-program.html">Workout</a>
+  <a class="active" href="cut-plan.html">Cut Plan</a>
+  <a href="supplements.html">Supplements</a>
+  <a href="trt-cut-structure.html">TRT + Cut</a>
+</nav>
+<div class="wrap">
+  <h1>12-Week Cut · Phase 1</h1>
+  <p class="muted">Editable targets · daily macros · weekly check-ins · saves on this device (localStorage)</p>
+  <details class="disclaimer"><summary>⚠️ Not medical advice — tap to read</summary>
+    <p><strong>Not medical advice.</strong> Calorie deficits aren’t right for everyone. Review this plan with your physician, especially while on TRT or any prescription. Stop and seek care for chest pain, fainting, severe dizziness, or signs of disordered eating. All numbers are estimates you should adjust based on real-world trend data.</p>
+  </details>
+  <div class="assume" data-zn-banner></div>
+  <div id="syncNote"></div>
+
+  <div class="sticky">
+    <div class="weekpick">
+      <button type="button" class="secondary" id="prevW" aria-label="Previous week">‹</button>
+      <select id="weekSel" aria-label="Week"></select>
+      <button type="button" class="secondary" id="nextW" aria-label="Next week">›</button>
+      <div class="lbl" id="weekInfo"></div>
+    </div>
+  </div>
+
+  <div id="recheck"></div>
+
+  <h2>Today’s targets</h2>
+  <div class="kpis">
+    <div class="kpi"><span class="muted">Calories</span><b id="kCal">–</b></div>
+    <div class="kpi"><span class="muted">Protein</span><b id="kP">–</b></div>
+    <div class="kpi"><span class="muted">Carbs</span><b id="kC">–</b></div>
+    <div class="kpi"><span class="muted">Fat</span><b id="kF">–</b></div>
+  </div>
+  <p class="muted small" id="kNote"></p>
+
+  <h2>Daily log — <span id="wLbl">Week 1</span></h2>
+  <div id="days"></div>
+  <div class="card" id="weekAvg"></div>
+
+  <h2>Weekly check-in</h2>
+  <div class="card">
+    <p class="muted small">Weigh in the same way each time (morning, after bathroom, before food). Measure waist <strong>at the navel</strong>, relaxed and not sucking in, tape level.</p>
+    <div class="g2">
+      <div><label for="cWeight">Weight (lb)</label><input type="number" inputmode="decimal" step="0.1" id="cWeight"></div>
+      <div><label for="cWaist">Waist at navel (in)</label><input type="number" inputmode="decimal" step="0.1" id="cWaist"></div>
+      <div><label for="cNeck">Neck (in, optional)</label><input type="number" inputmode="decimal" step="0.1" id="cNeck"></div>
+      <div><label for="cAdjust">Adjust flag</label><select id="cAdjust"><option value="no">On track</option><option value="yes">Needs adjust</option><option value="break">Diet break / refeed</option></select></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="cPhotos"> <span>Progress photos taken (front / side / back, same light &amp; time)</span></label>
+    <label for="cNotes">Adherence / notes</label>
+    <textarea id="cNotes" placeholder="Hunger, sleep, energy, training, anything your MD should know…"></textarea>
+    <p class="muted small" id="cSaved">Saves automatically.</p>
+  </div>
+
+  <h2>Six-pack goal: honest progress</h2>
+  <div class="card">
+    <p>Visible abs usually need roughly <strong>10–12% body fat for men</strong>. Coming from a higher starting body fat, that usually takes <strong>longer than 12 weeks</strong>. Treat these 12 weeks as <strong>Phase 1</strong>: build the habits, keep your strength, and get a steady downward trend in waist and weight. After that, a planned diet break, then Phase 2.</p>
+    <div id="sixEst"></div>
+    <h3>Phase 1 milestones</h3>
+    <div id="miles"></div>
+    <h3>Build the abs while fat comes off</h3>
+    <p class="muted small">Fat loss is what makes abs visible. Direct core work (2–3×/week, built into the workout program) makes them thicker, so they show sooner. Don't do hundreds of crunches. Train abs like any muscle: loaded movements, progression, then rest.</p>
+  </div>
+
+  <h2>Refeeds &amp; diet breaks</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Refeed day (optional, from ~week 5):</strong> 1 day every 1–2 weeks at about maintenance calories. Keep protein the same, keep fat about the same, and put the extra calories into carbs. Good on a heavy training day. Mark the day as “Refeed” in the daily log and its target switches automatically.</li>
+      <li><strong>Diet break:</strong> 7–14 days at estimated maintenance. Plan one after Phase 1 (around weeks 13–14). Take one earlier if strength, sleep, mood, or libido drop for 2+ weeks. Keep training and protein unchanged.</li>
+      <li>Refeeds and breaks are planned tools, not cheat days. They will push scale weight up 1–4 lb (water and glycogen). That's expected.</li>
+    </ul>
+  </div>
+
+  <h2>Profile &amp; target settings</h2>
+  <div class="card">
+    <div class="g2">
+      <div><label for="pSex">Sex</label><select id="pSex"><option value="m">Male</option><option value="f">Female</option></select></div>
+      <div><label for="pAge">Age</label><input type="number" inputmode="decimal" id="pAge"></div>
+      <div><label for="pH">Height (in) <span id="pHft" class="small"></span></label><input type="number" inputmode="decimal" step="0.5" id="pH"></div>
+      <div><label for="pW">Weight (lb)</label><input type="number" inputmode="decimal" step="0.1" id="pW"></div>
+      <div><label for="pAct">Activity factor</label><input type="number" inputmode="decimal" step="0.025" id="pAct"></div>
+      <div><label for="pLoss">Loss goal (lb/wk)</label><input type="number" inputmode="decimal" step="0.25" id="pLoss"></div>
+      <div><label for="pPg">Protein (g per lb)</label><input type="number" inputmode="decimal" step="0.05" id="pPg"></div>
+      <div><label for="pFp">Fat (% of kcal)</label><input type="number" inputmode="decimal" step="1" id="pFp"></div>
+    </div>
+    <label for="pStart">Program start (Week 1 Monday)</label><input type="date" id="pStart">
+    <p class="muted small">Activity guide: 1.2 sedentary · 1.375 light · <strong>1.45 desk job + lifting 3×/wk + some standing/physical work + walks</strong> · 1.55 moderate · 1.725 very active.</p>
+    <div class="card2 small" id="calcOut"></div>
+    <div class="toolbar"><button type="button" id="recalc">Recalculate targets from profile</button></div>
+    <h3>Targets (editable, overrides persist)</h3>
+    <div class="g2">
+      <div><label for="tCal">Calories</label><input type="number" inputmode="decimal" id="tCal"></div>
+      <div><label for="tP">Protein (g)</label><input type="number" inputmode="decimal" id="tP"></div>
+      <div><label for="tF">Fat (g)</label><input type="number" inputmode="decimal" id="tF"></div>
+      <div><label for="tC">Carbs (g)</label><input type="number" inputmode="decimal" id="tC"></div>
+    </div>
+    <p class="muted small">Changing calories, protein, or fat recalculates carbs as the remainder. <span id="lockNote"></span></p>
+    <div class="card2 small"><strong>Recheck rule:</strong> update your weight and recalculate <strong>every 4 weeks or every ~10 lb lost</strong>, whichever comes first. Early loss is fastest because it includes water, so expect the rate to slow. Change things only when the 2–3 week trend stalls, not after one bad weigh-in.</div>
+  </div>
+
+  <h2>Progress</h2>
+  <div class="card">
+    <h3>Weekly weight</h3>
+    <div class="bars" id="wBars"></div>
+    <h3>Waist at navel</h3>
+    <div class="bars green" id="waistBars"></div>
+    <table class="resp" id="progTable"></table>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" class="secondary" id="exportBtn">Export JSON</button>
+    <button type="button" class="secondary" id="importBtn">Import JSON</button>
+    <button type="button" class="danger" id="resetBtn">Reset</button>
+  </div>
+  <footer>Targets: Mifflin-St Jeor BMR × activity factor − (loss goal × 500 kcal/day), rounded to 50 kcal. Protein = g/lb × body weight (rounded to 5 g), fat = % of calories, carbs = remainder. Body-fat estimate uses the US Navy tape method (men), which is roughly ±3–4%. See also: <a href="workout-program.html">Workout</a> · <a href="trt-cut-structure.html">TRT + Cut</a>.</footer>
+</div>
+<script>
+/* Shared profile: generic defaults in source; personal stats only via URL hash -> localStorage */
+var ZN = (function(){
+  var PK = 'zn_profile_v1', HK = 'zn_profile_hash_applied_v1';
+  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:null, overrides:null, updated:null};
+  function get(){
+    try { var p = JSON.parse(localStorage.getItem(PK)); return Object.assign({}, DEF, p || {}); }
+    catch(e){ return Object.assign({}, DEF); }
+  }
+  function isSet(){ return !!localStorage.getItem(PK); }
+  function set(p){ p.updated = new Date().toISOString(); localStorage.setItem(PK, JSON.stringify(p)); return p; }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
+  function mondayOf(d){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); var k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x; }
+  function iso(d){ var m = d.getMonth()+1, dd = d.getDate(); return d.getFullYear() + '-' + (m<10?'0':'') + m + '-' + (dd<10?'0':'') + dd; }
+  function parseISO(s){ if(!s) return null; var a = String(s).split('-'); if(a.length<3) return null; var d = new Date(+a[0], +a[1]-1, +a[2]); return isNaN(d) ? null : d; }
+  /* Supported hash keys: h (inches) | hcm, w (lb), age, sex (m/f), act, loss (lb/wk), pg (protein g/lb), fp (fat %), kcal, p, f, c, start (YYYY-MM-DD) */
+  function applyHash(){
+    var h = (location.hash || '').replace(/^#/, '');
+    if(!h) return null;
+    var q; try { q = new URLSearchParams(h); } catch(e){ return null; }
+    var keys = ['h','hcm','w','age','sex','act','loss','pg','fp','kcal','p','f','c','start'];
+    var any = keys.some(function(k){ return q.has(k); });
+    if(!any) return null;
+    if(localStorage.getItem(HK) === h){ clearHash(); return null; }
+    var p = get();
+    if(num(q.get('h')) != null) p.heightIn = num(q.get('h'));
+    if(num(q.get('hcm')) != null) p.heightIn = Math.round(num(q.get('hcm')) / 2.54 * 10) / 10;
+    if(num(q.get('w')) != null) p.weight = num(q.get('w'));
+    if(num(q.get('age')) != null) p.age = num(q.get('age'));
+    if(q.has('sex')) p.sex = /^f/i.test(q.get('sex')) ? 'f' : 'm';
+    if(num(q.get('act')) != null) p.act = num(q.get('act'));
+    if(num(q.get('loss')) != null) p.loss = num(q.get('loss'));
+    if(num(q.get('pg')) != null) p.protPerLb = num(q.get('pg'));
+    if(num(q.get('fp')) != null) p.fatPct = num(q.get('fp'));
+    if(q.has('start') && parseISO(q.get('start'))) p.start = q.get('start');
+    var ov = {}; ['kcal','p','f','c'].forEach(function(k){ if(num(q.get(k)) != null) ov[k] = num(q.get(k)); });
+    p.overrides = Object.keys(ov).length ? ov : null;
+    p.hashApplied = true;
+    set(p);
+    localStorage.setItem(HK, h);
+    clearHash();
+    return p;
+  }
+  function clearHash(){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  function ensureStart(p){ if(!p.start){ p.start = iso(mondayOf(new Date())); set(p); } return p; }
+  function bmr(p){ var kg = p.weight * 0.453592, cm = p.heightIn * 2.54; return 10*kg + 6.25*cm - 5*p.age + (p.sex === 'f' ? -161 : 5); }
+  function tdee(p){ return bmr(p) * p.act; }
+  function targets(p){
+    var t = tdee(p), cal = Math.round((t - p.loss * 500) / 50) * 50;
+    var floor = p.sex === 'f' ? 1200 : 1500; if(cal < floor) cal = floor;
+    var pr = Math.round(p.weight * p.protPerLb / 5) * 5;
+    var f = Math.round(cal * (p.fatPct / 100) / 9);
+    var c = Math.max(50, Math.round((cal - pr*4 - f*9) / 4));
+    var maint = Math.round(t / 50) * 50;
+    return {cal:cal, p:pr, f:f, c:c, maint:maint, bmr:bmr(p), tdee:t, deficit:t - cal};
+  }
+  function bmi(p){ return p.weight / (p.heightIn * p.heightIn) * 703; }
+  function ftin(inches){ var ft = Math.floor(inches / 12), i = Math.round((inches - ft*12) * 10) / 10; if(i >= 12){ ft++; i = 0; } return ft + "'" + i + '"'; }
+  function bannerHTML(p){
+    var src = isSet() ? 'saved profile on this device' : 'generic placeholder defaults (prefill via URL hash or edit in Cut Plan)';
+    return '<strong>Assumptions (' + src + '):</strong> ' + (p.sex === 'f' ? 'Female' : 'Male') + ' · age ' + p.age + ' · ' + ftin(p.heightIn) + ' (' + Math.round(p.heightIn*2.54*10)/10 + ' cm) · ' + p.weight + ' lb · activity ×' + p.act + ' · target loss ~' + p.loss + ' lb/wk. Edit anytime in <a href="cut-plan.html">Cut Plan</a>.';
+  }
+  function fillBanners(){ var p = get(); document.querySelectorAll('[data-zn-banner]').forEach(function(el){ el.innerHTML = bannerHTML(p); }); }
+  function weekOf(dateObj, p){ var s = parseISO(p.start); if(!s) return 1; var d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()); return Math.floor(Math.round((d - s) / 86400000) / 7) + 1; }
+  function clampWeek(w){ return Math.min(12, Math.max(1, w)); }
+  function download(obj, name){ var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 0); }
+  function pickJSON(cb){ var i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = function(){ var f = i.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(){ try { cb(JSON.parse(r.result)); } catch(e){ alert('Invalid JSON file'); } }; r.readAsText(f); }; i.click(); }
+  function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var applied = applyHash();
+  return {get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
+})();
+
+(function(){
+  var KEY = 'zn_cut_v2';
+  var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var $ = function(id){ return document.getElementById(id); };
+  var prof = ZN.ensureStart(ZN.get());
+  function blankDay(){ return {type:'cut', cal:'', p:'', c:'', f:'', water:'', steps:''}; }
+  function blankWeek(){ return {weight:'', waist:'', neck:'', photos:false, adjust:'no', notes:''}; }
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } }
+  var st = load();
+  function norm(){
+    st.days = st.days || {}; st.weekly = st.weekly || {}; st.miles = st.miles || {};
+    for(var w=1; w<=12; w++){ if(!st.days[w]) st.days[w] = DAYS.map(blankDay); if(!st.weekly[w]) st.weekly[w] = blankWeek(); }
+  }
+  norm();
+  function save(){ localStorage.setItem(KEY, JSON.stringify(st)); }
+  var curWeek = ZN.clampWeek(ZN.weekOf(new Date(), prof));
+  var sel = curWeek;
+
+  function applyCalc(resetLock){
+    var t = ZN.targets(prof);
+    st.targets = {cal:t.cal, p:t.p, c:t.c, f:t.f};
+    st.maint = t.maint;
+    if(prof.overrides && !resetLock){
+      var o = prof.overrides;
+      if(o.kcal != null) st.targets.cal = o.kcal;
+      if(o.p != null) st.targets.p = o.p;
+      if(o.f != null) st.targets.f = o.f;
+      st.targets.c = o.c != null ? o.c : Math.max(0, Math.round((st.targets.cal - st.targets.p*4 - st.targets.f*9)/4));
+      st.manual = true;
+    } else { st.manual = false; }
+    st.lastRecalc = {week: sel, weight: prof.weight};
+    if(st.startWeight == null) st.startWeight = prof.weight;
+    st.syncedProfile = prof.updated;
+    save();
+  }
+  function consumeOverrides(){ if(!prof.overrides) return false; applyCalc(false); prof.overrides = null; prof = ZN.set(prof); st.syncedProfile = prof.updated; save(); return true; }
+  if(ZN.applied || prof.overrides){ if(!consumeOverrides()) applyCalc(true); }
+  else if(!st.targets){ applyCalc(true); }
+  else if(st.syncedProfile !== prof.updated){
+    if(!st.manual) applyCalc(true);
+    else $('syncNote').innerHTML = '<div class="warnbox">Your profile changed, but your targets are manual overrides. Tap <b>Recalculate</b> in settings to refresh them.</div>';
+  }
+
+  function dayDate(w, i){ var s = ZN.parseISO(prof.start); if(!s) return null; var d = new Date(s); d.setDate(d.getDate() + (w-1)*7 + i); return d; }
+  function md(d){ return d ? (d.toLocaleDateString(undefined, {month:'short', day:'numeric'})) : ''; }
+  function dayTarget(type){
+    var t = st.targets;
+    if(type === 'refeed'){ var m = st.maint || t.cal; return {cal:m, p:t.p, f:t.f, c:Math.max(0, Math.round((m - t.p*4 - t.f*9)/4))}; }
+    return t;
+  }
+  function isHit(d){ var t = dayTarget(d.type); return d.cal !== '' && Math.abs(+d.cal - t.cal) <= 150 && +d.p >= t.p * 0.9; }
+
+  function renderWeekPicker(){
+    var s = $('weekSel'); s.innerHTML = '';
+    for(var w=1; w<=12; w++){ var o = document.createElement('option'); o.value = w; o.textContent = 'Week ' + w + (w === curWeek ? ' (now)' : ''); s.appendChild(o); }
+    s.value = sel;
+    var d0 = dayDate(sel, 0), d6 = dayDate(sel, 6);
+    $('weekInfo').textContent = (d0 ? md(d0) + ' – ' + md(d6) + ' · ' : '') + (sel <= 2 ? 'Ramp-in' : sel <= 5 ? 'Base' : sel <= 8 ? 'Build' : sel <= 11 ? 'Intensify' : 'Deload + review');
+    $('wLbl').textContent = 'Week ' + sel;
+  }
+  function renderKpis(){
+    var todayIdx = (new Date().getDay() + 6) % 7;
+    var type = (sel === curWeek) ? st.days[sel][todayIdx].type : 'cut';
+    var t = dayTarget(type);
+    $('kCal').textContent = t.cal; $('kP').textContent = t.p + 'g'; $('kC').textContent = t.c + 'g'; $('kF').textContent = t.f + 'g';
+    $('kNote').textContent = (type === 'refeed' ? 'Refeed day: maintenance calories, extra from carbs. ' : '') + 'Estimated maintenance ≈ ' + (st.maint || '–') + ' kcal. ' + (st.manual ? 'Using manual target overrides.' : 'Calculated from your profile.');
+  }
+  function renderRecheck(){
+    var latest = null, latestW = null;
+    for(var w=12; w>=1; w--){ var v = parseFloat(st.weekly[w].weight); if(!isNaN(v)){ latest = v; latestW = w; break; } }
+    var lr = st.lastRecalc || {week:1, weight:prof.weight};
+    var reasons = [];
+    if(curWeek - lr.week >= 4) reasons.push('it has been ' + (curWeek - lr.week) + ' weeks since your last recalculation');
+    if(latest != null && lr.weight - latest >= 10) reasons.push('you are down ' + Math.round((lr.weight - latest)*10)/10 + ' lb since your last recalculation');
+    if(!reasons.length){ $('recheck').innerHTML = ''; return; }
+    $('recheck').innerHTML = '<div class="warnbox"><strong>Time to recheck targets:</strong> ' + reasons.join(' and ') + '.' + (latest != null ? '<div class="toolbar"><button type="button" id="useLatest">Use latest weigh-in (' + latest + ' lb) &amp; recalculate</button></div>' : '') + '</div>';
+    var b = $('useLatest'); if(b) b.onclick = function(){ prof.weight = latest; prof = ZN.set(prof); applyCalc(true); renderAll(); };
+  }
+  function renderDays(){
+    var wrap = $('days'); wrap.innerHTML = '';
+    var todayIdx = (new Date().getDay() + 6) % 7;
+    st.days[sel].forEach(function(d, i){
+      var t = dayTarget(d.type), hit = isHit(d);
+      var el = document.createElement('details'); el.className = 'card2 day';
+      if(sel === curWeek && i === todayIdx) el.open = true;
+      el.innerHTML =
+        '<summary><b>' + DAYS[i] + '</b><span class="muted small">' + md(dayDate(sel, i)) + '</span>' +
+        '<span class="small">' + (d.cal !== '' ? d.cal + ' kcal · ' + (d.p || 0) + 'P' : 'not logged') + (d.type === 'refeed' ? ' · <span class="badge">refeed</span>' : '') + '</span>' +
+        '<span class="hit ' + (hit ? 'yes' : 'no') + '">' + (hit ? '✓ on target' : '—') + '</span></summary>' +
+        '<div class="body">' +
+          '<label>Day type</label><select data-f="type"><option value="cut">Cut day</option><option value="refeed">Refeed (maintenance)</option></select>' +
+          '<div class="g2">' +
+            fld('cal', 'Calories', t.cal, d.cal) + fld('p', 'Protein g', t.p, d.p) +
+            fld('c', 'Carbs g', t.c, d.c) + fld('f', 'Fat g', t.f, d.f) +
+            fld('water', 'Water (oz)', '', d.water) + fld('steps', 'Steps', '', d.steps) +
+          '</div></div>';
+      el.querySelector('select').value = d.type;
+      el.querySelectorAll('[data-f]').forEach(function(inp){
+        inp.addEventListener('change', function(){
+          st.days[sel][i][inp.getAttribute('data-f')] = inp.value; save();
+          var open = el.open; renderDays(); renderAvg(); renderKpis(); renderProgress();
+          if(open) $('days').children[i].open = true;
+        });
+      });
+      wrap.appendChild(el);
+    });
+  }
+  function fld(f, lab, tgt, val){
+    return '<div><label>' + lab + (tgt !== '' ? ' <span class="tline">(target ' + tgt + ')</span>' : '') + '</label><input type="number" inputmode="decimal" data-f="' + f + '" value="' + ZN.esc(val) + '"></div>';
+  }
+  function avgs(w){
+    var s = {cal:0, p:0, c:0, f:0, n:0, hits:0, steps:0, sn:0};
+    st.days[w].forEach(function(d){ if(d.cal !== ''){ s.cal += +d.cal; s.p += +d.p || 0; s.c += +d.c || 0; s.f += +d.f || 0; s.n++; if(isHit(d)) s.hits++; } if(d.steps !== ''){ s.steps += +d.steps; s.sn++; } });
+    return s;
+  }
+  function renderAvg(){
+    var s = avgs(sel), t = st.targets;
+    if(!s.n){ $('weekAvg').innerHTML = '<span class="muted">No days logged yet this week. Tap a day above to log it.</span>'; return; }
+    $('weekAvg').innerHTML = '<strong>Week ' + sel + ' averages (' + s.n + ' days logged, ' + s.hits + ' on target)</strong>' +
+      '<div class="kpis" style="margin-top:8px">' +
+      '<div class="kpi"><span class="muted small">kcal / ' + t.cal + '</span><b>' + Math.round(s.cal/s.n) + '</b></div>' +
+      '<div class="kpi"><span class="muted small">P / ' + t.p + 'g</span><b>' + Math.round(s.p/s.n) + '</b></div>' +
+      '<div class="kpi"><span class="muted small">C / ' + t.c + 'g</span><b>' + Math.round(s.c/s.n) + '</b></div>' +
+      '<div class="kpi"><span class="muted small">F / ' + t.f + 'g</span><b>' + Math.round(s.f/s.n) + '</b></div></div>' +
+      (s.sn ? '<p class="muted small">Avg steps: ' + Math.round(s.steps/s.sn) + '</p>' : '');
+  }
+  function renderWeekly(){
+    var wk = st.weekly[sel];
+    $('cWeight').value = wk.weight; $('cWaist').value = wk.waist; $('cNeck').value = wk.neck;
+    $('cAdjust').value = wk.adjust || 'no'; $('cPhotos').checked = !!wk.photos; $('cNotes').value = wk.notes || '';
+  }
+  [['cWeight','weight'],['cWaist','waist'],['cNeck','neck'],['cAdjust','adjust'],['cNotes','notes']].forEach(function(pair){
+    $(pair[0]).addEventListener('change', function(){ st.weekly[sel][pair[1]] = $(pair[0]).value; if(pair[1] === 'weight' && sel === 1 && $(pair[0]).value) st.startWeight = parseFloat($(pair[0]).value); save(); $('cSaved').textContent = 'Saved ✓'; renderRecheck(); renderSix(); renderProgress(); });
+  });
+  $('cPhotos').addEventListener('change', function(){ st.weekly[sel].photos = $('cPhotos').checked; save(); renderProgress(); });
+
+  function navy(waist, neck, h){ if(!(waist > neck) || !h) return null; return 86.010*Math.log10(waist - neck) - 70.041*Math.log10(h) + 36.76; }
+  function latestBody(){
+    for(var w=12; w>=1; w--){ var k = st.weekly[w]; var wa = parseFloat(k.waist), ne = parseFloat(k.neck); if(!isNaN(wa) && !isNaN(ne)){ var wt = parseFloat(k.weight); return {week:w, waist:wa, neck:ne, weight: isNaN(wt) ? prof.weight : wt}; } }
+    return null;
+  }
+  function renderSix(){
+    var el = $('sixEst');
+    var lb = latestBody();
+    if(prof.sex !== 'm'){ el.innerHTML = '<p class="muted small">The tape estimate here uses the men’s Navy formula. For women, use a DEXA scan or a dedicated tool.</p>'; return; }
+    if(!lb){ el.innerHTML = '<div class="card2 small">Add <strong>waist at navel</strong> and <strong>neck</strong> in a weekly check-in to see a rough body-fat estimate and an honest timeline to ~10–12%.</div>'; return; }
+    var bf = navy(lb.waist, lb.neck, prof.heightIn);
+    if(bf == null || bf < 3 || bf > 60){ el.innerHTML = '<div class="card2 small">Couldn’t estimate. Check the waist and neck numbers.</div>'; return; }
+    var lbm = lb.weight * (1 - bf/100), t12 = lbm / 0.88, t10 = lbm / 0.90, toLose = lb.weight - t12;
+    var html = '<div class="card2"><strong>Rough estimate (week ' + lb.week + '):</strong> ~' + bf.toFixed(1) + '% body fat (Navy tape method, ±3–4%).';
+    if(toLose <= 0){ html += '<br>You’re in or near the visible-abs range. Focus on keeping muscle, core strength, and consistency.</div>'; el.innerHTML = html; return; }
+    var fast = Math.ceil(toLose / 1.25), slow = Math.ceil(toLose / 0.75);
+    html += '<br>If you keep your lean mass, ~12% ≈ <strong>' + Math.round(t12) + ' lb</strong> and ~10% ≈ <strong>' + Math.round(t10) + ' lb</strong>, about <strong>' + Math.round(toLose) + ' lb</strong> from here.' +
+      '<br>At a realistic 0.75–1.25 lb/week average (it slows as you get leaner), that’s about <strong>' + fast + '–' + slow + ' weeks</strong> of dieting, or roughly ' + Math.max(1, Math.round(fast/12)) + '–' + Math.max(1, Math.round(slow/12)) + ' twelve-week phases with diet breaks in between.' +
+      '<br><span class="muted small">That’s normal. Phase 1 is about trend, habits, and strength, not abs by week 12.</span></div>';
+    el.innerHTML = html;
+  }
+  function renderMiles(){
+    var sw = st.startWeight || prof.weight;
+    var r = function(a){ return Math.round(sw * a); };
+    var M = [
+      ['w0', 'Week 1: baseline weigh-in, waist at navel, neck, and photos'],
+      ['w4a', 'Week 4: weight trend down ~2–3% (≈' + r(.02) + '–' + r(.03) + ' lb, partly water)'],
+      ['w4b', 'Week 4: waist at navel down ~0.5–1.5 in · photos #2 · recheck targets'],
+      ['w8a', 'Week 8: down ~4–6% from start (≈' + r(.04) + '–' + r(.06) + ' lb) · lifts steady or up'],
+      ['w8b', 'Week 8: waist down ~1.5–2.5 in · photos #3 · recheck targets'],
+      ['w12a', 'Week 12: down ~6–8% from start (≈' + r(.06) + '–' + r(.08) + ' lb) · waist down ~2–4 in'],
+      ['w12b', 'Week 12: photos #4 · labs/MD check-in · plan a 1–2 week diet break, then Phase 2']
+    ];
+    $('miles').innerHTML = M.map(function(m){ return '<label class="chk"><input type="checkbox" data-m="' + m[0] + '"' + (st.miles[m[0]] ? ' checked' : '') + '> <span>' + m[1] + '</span></label>'; }).join('') +
+      '<p class="muted small">These are typical ranges, not guarantees. If the waist is shrinking and strength is holding, you’re winning even when the scale stalls.</p>';
+    $('miles').querySelectorAll('[data-m]').forEach(function(c){ c.onchange = function(){ st.miles[c.getAttribute('data-m')] = c.checked; save(); }; });
+  }
+  function renderProfile(){
+    $('pSex').value = prof.sex; $('pAge').value = prof.age; $('pH').value = prof.heightIn; $('pW').value = prof.weight;
+    $('pAct').value = prof.act; $('pLoss').value = prof.loss; $('pPg').value = prof.protPerLb; $('pFp').value = prof.fatPct; $('pStart').value = prof.start || '';
+    $('pHft').textContent = '= ' + ZN.ftin(prof.heightIn) + ' / ' + Math.round(prof.heightIn*2.54*10)/10 + ' cm';
+    var t = ZN.targets(prof), pctBW = prof.loss / prof.weight * 100;
+    $('calcOut').innerHTML = 'BMR ≈ <b>' + Math.round(t.bmr) + '</b> · TDEE ≈ <b>' + Math.round(t.tdee) + '</b> · deficit ≈ <b>' + Math.round(t.deficit) + '</b> kcal/day (~' + (t.deficit*7/3500).toFixed(2) + ' lb/wk)<br>Formula suggests <b>' + t.cal + '</b> kcal · P <b>' + t.p + '</b> · C <b>' + t.c + '</b> · F <b>' + t.f + '</b> · maintenance ≈ <b>' + t.maint + '</b>' +
+      (pctBW > 1 ? '<br><span style="color:var(--warn)">⚠ That loss goal is more than 1% of body weight per week, which is aggressive. Consider lowering it.</span>' : '') +
+      (t.cal < t.bmr * 0.95 ? '<br><span style="color:var(--warn)">⚠ Target is below estimated BMR. Discuss with your MD.</span>' : '');
+    $('tCal').value = st.targets.cal; $('tP').value = st.targets.p; $('tF').value = st.targets.f; $('tC').value = st.targets.c;
+    $('lockNote').textContent = st.manual ? 'Manual overrides active.' : '';
+  }
+  [['pSex','sex',0],['pAge','age',1],['pH','heightIn',1],['pW','weight',1],['pAct','act',1],['pLoss','loss',1],['pPg','protPerLb',1],['pFp','fatPct',1],['pStart','start',0]].forEach(function(a){
+    $(a[0]).addEventListener('change', function(){
+      var v = $(a[0]).value; if(a[2]){ v = parseFloat(v); if(isNaN(v)) return; }
+      prof[a[1]] = v; prof = ZN.set(prof);
+      if(a[1] === 'start'){ curWeek = ZN.clampWeek(ZN.weekOf(new Date(), prof)); sel = curWeek; }
+      if(!st.manual) applyCalc(true); else { st.syncedProfile = prof.updated; save(); }
+      ZN.fillBanners(); renderAll();
+    });
+  });
+  $('recalc').onclick = function(){ applyCalc(true); $('syncNote').innerHTML = ''; renderAll(); };
+  ['tCal','tP','tF'].forEach(function(id){
+    $(id).addEventListener('change', function(){
+      st.targets.cal = +$('tCal').value; st.targets.p = +$('tP').value; st.targets.f = +$('tF').value;
+      st.targets.c = Math.max(0, Math.round((st.targets.cal - st.targets.p*4 - st.targets.f*9)/4));
+      st.manual = true; save(); renderAll();
+    });
+  });
+  $('tC').addEventListener('change', function(){ st.targets.c = +$('tC').value; st.manual = true; save(); renderAll(); });
+
+  function renderProgress(){
+    var ws = [], wa = [];
+    for(var w=1; w<=12; w++){ var a = parseFloat(st.weekly[w].weight), b = parseFloat(st.weekly[w].waist); ws.push(isNaN(a) ? null : a); wa.push(isNaN(b) ? null : b); }
+    bars($('wBars'), ws, ' lb'); bars($('waistBars'), wa, ' in');
+    var h = '<thead><tr><th>Week</th><th>Weight</th><th>Waist (navel)</th><th>BF% est</th><th>Avg kcal</th><th>Avg P/C/F</th><th>Photos</th><th>Flag</th></tr></thead><tbody>';
+    for(var w=1; w<=12; w++){
+      var k = st.weekly[w], s = avgs(w), bf = navy(parseFloat(k.waist), parseFloat(k.neck), prof.heightIn);
+      h += '<tr><td data-label="Week">' + w + (w === curWeek ? ' (now)' : '') + '</td><td data-label="Weight">' + (k.weight || '—') + '</td><td data-label="Waist (navel)">' + (k.waist || '—') + '</td><td data-label="BF% est">' + (bf != null && prof.sex === 'm' ? bf.toFixed(1) : '—') + '</td><td data-label="Avg kcal">' + (s.n ? Math.round(s.cal/s.n) : '—') + '</td><td data-label="Avg P/C/F">' + (s.n ? Math.round(s.p/s.n) + '/' + Math.round(s.c/s.n) + '/' + Math.round(s.f/s.n) : '—') + '</td><td data-label="Photos">' + (k.photos ? '✓' : '—') + '</td><td data-label="Flag">' + ({no:'—', yes:'adjust', 'break':'break'}[k.adjust] || '—') + '</td></tr>';
+    }
+    $('progTable').innerHTML = h + '</tbody>';
+  }
+  function bars(el, vals, unit){
+    el.innerHTML = ''; var nums = vals.filter(function(x){ return x != null; });
+    var mn = nums.length ? Math.min.apply(null, nums) : 0, mx = nums.length ? Math.max.apply(null, nums) : 1;
+    vals.forEach(function(v, i){ var b = document.createElement('i'); if(v == null){ b.style.height = '2px'; b.style.opacity = '.25'; } else { b.style.height = (mx === mn ? 50 : (v - mn)/(mx - mn)*70 + 12) + 'px'; } b.title = 'W' + (i+1) + ': ' + (v == null ? '—' : v + unit); el.appendChild(b); });
+  }
+  $('weekSel').onchange = function(){ sel = +$('weekSel').value; renderAll(); };
+  $('prevW').onclick = function(){ if(sel > 1){ sel--; renderAll(); } };
+  $('nextW').onclick = function(){ if(sel < 12){ sel++; renderAll(); } };
+  $('exportBtn').onclick = function(){ ZN.download({profile: ZN.get(), cut: st}, 'cut-plan-backup.json'); };
+  $('importBtn').onclick = function(){ ZN.pickJSON(function(o){ if(o.profile){ prof = ZN.set(Object.assign(ZN.get(), o.profile)); } st = o.cut || o; norm(); save(); curWeek = ZN.clampWeek(ZN.weekOf(new Date(), prof)); sel = curWeek; ZN.fillBanners(); renderAll(); alert('Imported'); }); };
+  $('resetBtn').onclick = function(){
+    if(!confirm('Reset ALL cut-plan logs and targets?')) return;
+    localStorage.removeItem(KEY);
+    if(confirm('Also clear your saved profile (stats) on this device?')){ localStorage.removeItem('zn_profile_v1'); localStorage.removeItem('zn_profile_hash_applied_v1'); }
+    location.reload();
+  };
+  function renderAll(){ renderWeekPicker(); renderKpis(); renderRecheck(); renderDays(); renderAvg(); renderWeekly(); renderSix(); renderMiles(); renderProfile(); renderProgress(); }
+  ZN.fillBanners(); renderAll();
+})();
+</script>
+</body>
+</html>

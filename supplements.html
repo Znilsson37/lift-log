@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>Supplements — Hydration, Peptides &amp; Tracker</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2332;--card2:#141c28;--border:#2d3a4d;--text:#e8eef6;--muted:#a7b6c6;--accent:#4aa3f5;--good:#3ecf8e;--warn:#f0b429;--danger:#f07178}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:var(--accent)}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#0a0e14;border-bottom:1px solid var(--border)}
+.topnav a{flex:1 1 22%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
+.topnav a.active{border-color:var(--accent);background:#1d3350;color:#fff;font-weight:600}
+.wrap{max-width:1040px;margin:0 auto;padding:12px}
+h1{font-size:1.35rem;margin:6px 0 4px;line-height:1.25}
+h2{font-size:1.12rem;margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:14px 0 6px;color:#c3d3e6}
+p{margin:.5em 0}
+.muted{color:var(--muted);font-size:.9rem}
+.small{font-size:.82rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
+.assume{background:#1c2838;border-left:4px solid var(--warn);padding:10px 12px;margin:12px 0;border-radius:0 10px 10px 0;font-size:.9rem}
+.disclaimer{background:#2a1a1c;border:1px solid #5a3038;border-radius:12px;padding:12px;margin:12px 0;font-size:.9rem}
+.disclaimer strong{color:var(--danger)}
+details.disclaimer summary,details.card summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{font:inherit;font-size:16px;width:100%;min-height:44px;background:#111923;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+textarea{min-height:84px}
+button,.btn{font:inherit;font-size:1rem;min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;touch-action:manipulation}
+button.secondary{background:#2a3548}
+button.danger{background:#8b3a42}
+button.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+button.on{background:var(--good);color:#06120c}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.toolbar>button{flex:1 1 auto}
+.grid{display:grid;gap:10px;grid-template-columns:1fr}
+.g2{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.g2>*,.grid>*{min-width:0}
+.sticky{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.97);border-bottom:1px solid var(--border);padding:8px 12px;margin:0 -12px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.badge{display:inline-block;font-size:.72rem;padding:2px 7px;border-radius:5px;background:#243044;color:#a8c4e0;margin:0 4px 4px 0}
+.badge.otc{background:#1a3a2a;color:#7ddea8}.badge.rx{background:#3a2a1a;color:#f0c070}.badge.no{background:#3a1a1a;color:#f0a0a0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.4rem;color:var(--good);line-height:1.2}
+.bars{display:flex;align-items:flex-end;gap:3px;height:90px;margin:8px 0}
+.bars i{flex:1;display:block;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.bars.green i{background:var(--good)}
+.warnbox{background:#2b2410;border:1px solid #6b5520;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.okbox{background:#10291d;border:1px solid #1f6b47;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.chk{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:6px 0;cursor:pointer}
+.chk input{width:26px;height:26px;min-height:26px;flex:0 0 26px;margin:2px 0 0}
+table.resp{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0}
+table.resp th,table.resp td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+table.resp th{background:var(--card2)}
+footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
+@media (max-width:640px){
+  table.resp thead{display:none}
+  table.resp,table.resp tbody,table.resp tr,table.resp td{display:block;width:100%}
+  table.resp tr{border:1px solid var(--border);border-radius:10px;margin:8px 0;padding:4px 12px;background:var(--card2)}
+  table.resp td{border:0;border-bottom:1px solid #222d3c;display:flex;justify-content:space-between;gap:12px;padding:8px 0;text-align:right}
+  table.resp td:last-child{border-bottom:0}
+  table.resp td::before{content:attr(data-label);color:var(--muted);font-size:.85rem;text-align:left;flex:0 0 auto}
+}
+@media (min-width:760px){
+  .wrap{padding:20px}
+  h1{font-size:1.6rem}
+  .topnav a{flex:0 1 auto;padding:6px 14px}
+  .grid.md2{grid-template-columns:1fr 1fr}
+  .grid.md3{grid-template-columns:repeat(3,1fr)}
+  .grid.md4{grid-template-columns:repeat(4,1fr)}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .sticky{margin:0 -20px;padding:8px 20px}
+}
+
+.product h3{margin-top:4px}
+.price{font-weight:700;color:var(--good);margin:6px 0}
+.caveat{font-size:.85rem;color:#c9b89e;margin-top:6px}
+.product a{display:inline-flex;align-items:center;min-height:44px}
+.supp{padding:12px}
+.chips{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.chip{min-height:48px;padding:4px 0;border-radius:10px;background:#243044;color:var(--text);font-size:.85rem;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.chip small{font-size:.68rem;color:var(--muted)}
+.chip.on{background:var(--good);color:#06120c}
+.chip.on small{color:#0b2a1b}
+.chip.today{outline:2px solid var(--accent);outline-offset:1px}
+.weekpick{display:grid;grid-template-columns:52px 1fr 52px;gap:8px}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="workout-program.html">Workout</a>
+  <a href="cut-plan.html">Cut Plan</a>
+  <a class="active" href="supplements.html">Supplements</a>
+  <a href="trt-cut-structure.html">TRT + Cut</a>
+</nav>
+<div class="wrap">
+  <h1>Supplements: Hydration, Peptides &amp; Tracker</h1>
+  <p class="muted">Prices as listed ~Oct 6, 2026 and subject to change. Always check the live listing.</p>
+  <div class="disclaimer">
+    <strong>Not medical advice.</strong> Dietary supplements are not FDA-approved to diagnose, treat, cure, or prevent disease. Prescription medications require a physician. This is especially true for peptides and weight-loss drugs, so discuss them with your doctor. This page will not help you buy controlled, research-only, or black-market products.
+  </div>
+  <div class="assume" data-zn-banner></div>
+  <div class="toolbar"><button type="button" class="secondary" onclick="document.getElementById('tracker').scrollIntoView({behavior:'smooth'})">Jump to today’s supplement check-off ↓</button></div>
+
+<h2>Hydration &amp; electrolytes</h2>
+  <p class="muted">4–6 solid OTC options with real product-page URLs. Typical use: around workouts or high-sweat days. High-sodium products (e.g. LMNT) may not suit everyone — check with MD if you have hypertension or kidney disease.</p>
+  <div class="grid md2" id="hydration">
+
+    <div class="card product">
+      <span class="badge otc">OTC dietary supplement</span>
+      <h3>LMNT Zero Sugar Electrolytes (Citrus Salt, 30-count)</h3>
+      <p>High-sodium electrolyte stick packs (label: 1000 mg sodium, 200 mg potassium, 60 mg magnesium). Zero sugar; popular for training and low-carb diets.</p>
+      <p><strong>Typical use note:</strong> Mix 1 stick in 16–32 oz water around training or sweaty days. High sodium — not for unrestricted daily use if salt-sensitive.</p>
+      <p class="price">~4.97 (Amazon, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/dp/B07TT8B1JJ" target="_blank" rel="noopener">Amazon product page</a> · <a href="https://drinklmnt.com/products/lmnt-recharge-electrolyte-drink" target="_blank" rel="noopener">Official brand page</a></p>
+      <p class="caveat">Caveat: Expensive per serving; very salty; confirm sodium fits your medical picture.</p>
+    </div>
+
+    <div class="card product">
+      <span class="badge otc">OTC</span>
+      <h3>Liquid I.V. Hydration Multiplier (16 sticks)</h3>
+      <p>Cellular Transport Technology–style electrolyte + glucose powder for rapid rehydration. Contains sugar/carbs (not zero-sugar).</p>
+      <p><strong>Typical use note:</strong> 1 stick in 16 oz water when dehydrated or after hard sessions. Watch carbs if cutting tightly.</p>
+      <p class="price">~3.30–4.99 depending on flavor (Amazon, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/Liquid-I-V-Hydration-Multiplier-Single-Serving/dp/B09VCS1YM1" target="_blank" rel="noopener">Amazon — Grape 16ct example</a></p>
+      <p class="caveat">Caveat: Not sugar-free; flavors/prices vary; verify current listing.</p>
+    </div>
+
+    <div class="card product">
+      <span class="badge otc">OTC</span>
+      <h3>Nuun Sport Electrolyte Tablets (Mixed, 4 tubes / 40 servings)</h3>
+      <p>Low-calorie effervescent tablets with sodium, potassium, magnesium, calcium, chloride. Easy for desk/gym bottle.</p>
+      <p><strong>Typical use note:</strong> 1 tablet in 16 oz water during or after lunch workouts.</p>
+      <p class="price">~1.28 (Amazon 4-pack, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/Nuun-Sport-Electrolyte-Tablets-Electrolytes/dp/B0CYJKKLZB" target="_blank" rel="noopener">Amazon product page</a> · <a href="https://nuunlife.com/products/nuun-sport" target="_blank" rel="noopener">Official Nuun Sport</a></p>
+      <p class="caveat">Caveat: Lower sodium than LMNT — may need more than one serving for heavy sweaters.</p>
+    </div>
+
+    <div class="card product">
+      <span class="badge otc">OTC</span>
+      <h3>Pedialyte Sport Electrolyte Powder (Lemon Lime, 36 packets)</h3>
+      <p>Sports-oriented Pedialyte with 5 key electrolytes for before/during/after exercise.</p>
+      <p><strong>Typical use note:</strong> 1 packet mixed as directed around training; useful if GI-sensitive to other mixes.</p>
+      <p class="price">~3.90 (Amazon 36ct, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/Pedialyte-Electrolyte-Hydration-Electrolytes-Exercise/dp/B0B2GJFPX3" target="_blank" rel="noopener">Amazon product page</a></p>
+      <p class="caveat">Caveat: Larger packs cost more upfront; check sugar content on label for cut macros.</p>
+    </div>
+
+    <div class="card product">
+      <span class="badge otc">OTC</span>
+      <h3>Skratch Labs Sport Hydration Mix (Lemon &amp; Lime, 20 servings)</h3>
+      <p>Real-fruit flavored hydration mix with electrolytes + simple carbs; designed for endurance/training GI comfort.</p>
+      <p><strong>Typical use note:</strong> 1 scoop in 12–16 oz water during longer cardio or hot sessions.</p>
+      <p class="price">~3.95 (Amazon 20-serving, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/Hydration-Servings-Electrolyte-Developed-Performance/dp/B075NPB5S1" target="_blank" rel="noopener">Amazon product page</a> · <a href="https://www.skratchlabs.com/products/hydration-sport-drink-mix" target="_blank" rel="noopener">Official Skratch</a></p>
+      <p class="caveat">Caveat: Contains carbs — count toward daily macros.</p>
+    </div>
+
+    <div class="card product">
+      <span class="badge otc">OTC</span>
+      <h3>Gatorlyte Rapid Rehydration (Variety, 18 packs)</h3>
+      <p>Lower-sugar Gatorade line with specialized 5-electrolyte blend; single-serve packs.</p>
+      <p><strong>Typical use note:</strong> 1 pack mixed with ~16.9 oz water for quick rehydration after gym.</p>
+      <p class="price">~1.76 (Amazon 18-pack variety, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/Rehydration-Electrolyte-Specialized-Electrolytes-Scientifically/dp/B0BPN423GH" target="_blank" rel="noopener">Amazon product page</a></p>
+      <p class="caveat">Caveat: Still contains some sugar; verify flavor pack contents.</p>
+    </div>
+  </div>
+
+  <h2>Peptides: evidence-backed, public options only</h2>
+  <div class="disclaimer">
+    <strong>Peptide rules on this page:</strong> OTC collagen = buy links OK. FDA-approved Rx peptides (semaglutide/tirzepatide) = informational + official pages only, prescription required. Research-only / unapproved peptides = named only to explain why we will <em>not</em> link purchase options.
+  </div>
+
+  <h3>B1. OTC collagen peptides</h3>
+  <div class="grid md2">
+    <div class="card product">
+      <span class="badge otc">OTC dietary supplement</span>
+      <h3>Vital Proteins Collagen Peptides Powder Advanced (Unflavored, 20 oz)</h3>
+      <p>Hydrolyzed collagen peptides with hyaluronic acid &amp; vitamin C; marketed for hair/skin/nails/joints. Not an anabolic steroid or fat-loss drug.</p>
+      <p><strong>Typical use note:</strong> Per label (often ~1–2 scoops in coffee/shake). Counts partly toward protein total but is incomplete vs whey for leucine — still hit whole-food/whey protein targets.</p>
+      <p class="price">~8.99 one-time listed in search results Oct 2026 (verify live price)</p>
+      <p><a href="https://www.amazon.com/Vital-Proteins-Collagen-Peptides-Pasture-Raised/dp/B00K6JUG4K" target="_blank" rel="noopener">Amazon product page</a></p>
+      <p class="caveat">Caveat: Supplement claims not FDA-evaluated for disease treatment; evidence for muscle hypertrophy is limited vs complete proteins.</p>
+    </div>
+    <div class="card product">
+      <span class="badge otc">OTC dietary supplement</span>
+      <h3>Sports Research Collagen Peptides (Unflavored, 16 oz)</h3>
+      <p>Hydrolyzed type I &amp; III bovine collagen peptides; easy-mix powder.</p>
+      <p><strong>Typical use note:</strong> Per label into water/coffee; optional add-on, not a TRT or cut replacement.</p>
+      <p class="price">~2.95 (Amazon / official, Oct 2026)</p>
+      <p><a href="https://www.amazon.com/dp/B00XQ2XGAA" target="_blank" rel="noopener">Amazon ASIN B00XQ2XGAA</a> · <a href="https://www.sportsresearch.com/products/collagen-peptides-hydrolyzed-gelatin-2" target="_blank" rel="noopener">Official Sports Research</a></p>
+      <p class="caveat">Caveat: Same class as above — joint/skin positioning; not magically “muscle-building peptides.”</p>
+    </div>
+  </div>
+
+  <h3>B2. FDA-approved prescription peptide medications (weight loss)</h3>
+  <p class="muted">Prescription only — discuss with a physician. Links are official FDA/label or manufacturer pages, not pharmacies.</p>
+  <div class="grid md2">
+    <div class="card product">
+      <span class="badge rx">Prescription only · FDA-approved</span>
+      <h3>Wegovy (semaglutide)</h3>
+      <p>GLP-1 receptor agonist peptide medication for chronic weight management (and CV risk reduction in indicated adults) with diet + activity. Manufacturer: Novo Nordisk.</p>
+      <p><strong>Label titration (informational):</strong> Injection commonly starts 0.25 mg weekly × 4 weeks, then steps up (0.5 → 1 → 1.7) toward maintenance 2.4 mg weekly (or 1.7 if needed) — <em>physician directs</em>.</p>
+      <p class="price">Price: prescription / insurance — not listed as OTC</p>
+      <p><a href="https://www.wegovy.com/prescribing-information.html" target="_blank" rel="noopener">Wegovy prescribing information (manufacturer)</a> · <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ee06186f-2aa3-4990-a760-757579d8f77b" target="_blank" rel="noopener">DailyMed label</a></p>
+      <p class="caveat">Caveat: Boxed warning re: thyroid C-cell tumors in rodents; contraindications include personal/family MTC or MEN2. GI side effects common. Do not combine with other GLP-1s. If on TRT, coordinate your lean-mass strategy with your MD. At higher BMI these labels may apply; eligibility is your physician’s call.</p>
+    </div>
+    <div class="card product">
+      <span class="badge rx">Prescription only · FDA-approved</span>
+      <h3>Zepbound (tirzepatide)</h3>
+      <p>GIP/GLP-1 dual agonist peptide for chronic weight management (and OSA indication in eligible adults) with diet + activity. Manufacturer: Eli Lilly.</p>
+      <p><strong>Label titration (informational):</strong> Start 2.5 mg weekly × 4 weeks (initiation only), then increase by 2.5 mg no faster than every 4 weeks; maintenance often 5, 10, or 15 mg weekly — <em>physician directs</em>.</p>
+      <p class="price">Price: prescription / insurance — not listed as OTC</p>
+      <p><a href="https://zepbound.lilly.com/what-is-zepbound" target="_blank" rel="noopener">Zepbound manufacturer patient page</a> · <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=487cd7e7-434c-4925-99fa-aa80b1cc776b" target="_blank" rel="noopener">DailyMed label</a></p>
+      <p class="caveat">Caveat: Similar serious-risk counseling as other incretins (pancreatitis, gallbladder, dehydration, etc.). Coadministration with other tirzepatide or GLP-1 products not recommended per label.</p>
+    </div>
+  </div>
+
+  <h3>B3. Research-only / not recommended for purchase here</h3>
+  <div class="card2">
+    <span class="badge no">Not FDA-approved for bodybuilding / weight loss</span>
+    <p>Compounds such as <strong>BPC-157</strong>, <strong>TB-500</strong>, <strong>CJC-1295</strong>, <strong>ipamorelin</strong>, and similar “research peptides” are <strong>not FDA-approved</strong> for muscle building, fat loss, or recovery in healthy trainees. Quality, purity, and legality of online “research chemical” sources are unreliable and unsafe.</p>
+    <p><strong>This package intentionally provides no buy links, vendor names, or “where to get” guidance for these.</strong> If a physician ever discusses an approved therapy, it will be through legitimate prescription channels — not underground peptide shops.</p>
+  </div>
+
+  
+  <section id="tracker">
+  <h2>Supplement tracker (12 weeks)</h2>
+  <p class="muted small">Tap a day to check it off. Edit names, doses, and timing below. Saves on this device. Prescription items: log adherence only. Your MD sets the dose.</p>
+  <div class="sticky">
+    <div class="weekpick">
+      <button type="button" class="secondary" id="prevW" aria-label="Previous week">‹</button>
+      <select id="weekSel" aria-label="Week"></select>
+      <button type="button" class="secondary" id="nextW" aria-label="Next week">›</button>
+    </div>
+  </div>
+  <div id="suppList"></div>
+  <div class="toolbar"><button type="button" id="addSupp">+ Add supplement / med</button></div>
+  <div class="card">
+    <label for="weekNotes">Week notes</label>
+    <textarea id="weekNotes" placeholder="Side effects, missed doses, MD changes…"></textarea>
+    <p class="muted small" id="adh"></p>
+  </div>
+  <div class="toolbar">
+    <button type="button" class="secondary" id="exportSupp">Export JSON</button>
+    <button type="button" class="secondary" id="importSupp">Import JSON</button>
+    <button type="button" class="danger" id="resetSupp">Reset tracker</button>
+  </div>
+  </section>
+  <footer>Prices were taken from public product pages around Oct 6, 2026. See also <a href="trt-cut-structure.html">TRT + Cut</a> for timing and talking points with your physician.</footer>
+</div>
+<script>
+/* Shared profile: generic defaults in source; personal stats only via URL hash -> localStorage */
+var ZN = (function(){
+  var PK = 'zn_profile_v1', HK = 'zn_profile_hash_applied_v1';
+  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:null, overrides:null, updated:null};
+  function get(){
+    try { var p = JSON.parse(localStorage.getItem(PK)); return Object.assign({}, DEF, p || {}); }
+    catch(e){ return Object.assign({}, DEF); }
+  }
+  function isSet(){ return !!localStorage.getItem(PK); }
+  function set(p){ p.updated = new Date().toISOString(); localStorage.setItem(PK, JSON.stringify(p)); return p; }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
+  function mondayOf(d){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); var k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x; }
+  function iso(d){ var m = d.getMonth()+1, dd = d.getDate(); return d.getFullYear() + '-' + (m<10?'0':'') + m + '-' + (dd<10?'0':'') + dd; }
+  function parseISO(s){ if(!s) return null; var a = String(s).split('-'); if(a.length<3) return null; var d = new Date(+a[0], +a[1]-1, +a[2]); return isNaN(d) ? null : d; }
+  /* Supported hash keys: h (inches) | hcm, w (lb), age, sex (m/f), act, loss (lb/wk), pg (protein g/lb), fp (fat %), kcal, p, f, c, start (YYYY-MM-DD) */
+  function applyHash(){
+    var h = (location.hash || '').replace(/^#/, '');
+    if(!h) return null;
+    var q; try { q = new URLSearchParams(h); } catch(e){ return null; }
+    var keys = ['h','hcm','w','age','sex','act','loss','pg','fp','kcal','p','f','c','start'];
+    var any = keys.some(function(k){ return q.has(k); });
+    if(!any) return null;
+    if(localStorage.getItem(HK) === h){ clearHash(); return null; }
+    var p = get();
+    if(num(q.get('h')) != null) p.heightIn = num(q.get('h'));
+    if(num(q.get('hcm')) != null) p.heightIn = Math.round(num(q.get('hcm')) / 2.54 * 10) / 10;
+    if(num(q.get('w')) != null) p.weight = num(q.get('w'));
+    if(num(q.get('age')) != null) p.age = num(q.get('age'));
+    if(q.has('sex')) p.sex = /^f/i.test(q.get('sex')) ? 'f' : 'm';
+    if(num(q.get('act')) != null) p.act = num(q.get('act'));
+    if(num(q.get('loss')) != null) p.loss = num(q.get('loss'));
+    if(num(q.get('pg')) != null) p.protPerLb = num(q.get('pg'));
+    if(num(q.get('fp')) != null) p.fatPct = num(q.get('fp'));
+    if(q.has('start') && parseISO(q.get('start'))) p.start = q.get('start');
+    var ov = {}; ['kcal','p','f','c'].forEach(function(k){ if(num(q.get(k)) != null) ov[k] = num(q.get(k)); });
+    p.overrides = Object.keys(ov).length ? ov : null;
+    p.hashApplied = true;
+    set(p);
+    localStorage.setItem(HK, h);
+    clearHash();
+    return p;
+  }
+  function clearHash(){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  function ensureStart(p){ if(!p.start){ p.start = iso(mondayOf(new Date())); set(p); } return p; }
+  function bmr(p){ var kg = p.weight * 0.453592, cm = p.heightIn * 2.54; return 10*kg + 6.25*cm - 5*p.age + (p.sex === 'f' ? -161 : 5); }
+  function tdee(p){ return bmr(p) * p.act; }
+  function targets(p){
+    var t = tdee(p), cal = Math.round((t - p.loss * 500) / 50) * 50;
+    var floor = p.sex === 'f' ? 1200 : 1500; if(cal < floor) cal = floor;
+    var pr = Math.round(p.weight * p.protPerLb / 5) * 5;
+    var f = Math.round(cal * (p.fatPct / 100) / 9);
+    var c = Math.max(50, Math.round((cal - pr*4 - f*9) / 4));
+    var maint = Math.round(t / 50) * 50;
+    return {cal:cal, p:pr, f:f, c:c, maint:maint, bmr:bmr(p), tdee:t, deficit:t - cal};
+  }
+  function bmi(p){ return p.weight / (p.heightIn * p.heightIn) * 703; }
+  function ftin(inches){ var ft = Math.floor(inches / 12), i = Math.round((inches - ft*12) * 10) / 10; if(i >= 12){ ft++; i = 0; } return ft + "'" + i + '"'; }
+  function bannerHTML(p){
+    var src = isSet() ? 'saved profile on this device' : 'generic placeholder defaults (prefill via URL hash or edit in Cut Plan)';
+    return '<strong>Assumptions (' + src + '):</strong> ' + (p.sex === 'f' ? 'Female' : 'Male') + ' · age ' + p.age + ' · ' + ftin(p.heightIn) + ' (' + Math.round(p.heightIn*2.54*10)/10 + ' cm) · ' + p.weight + ' lb · activity ×' + p.act + ' · target loss ~' + p.loss + ' lb/wk. Edit anytime in <a href="cut-plan.html">Cut Plan</a>.';
+  }
+  function fillBanners(){ var p = get(); document.querySelectorAll('[data-zn-banner]').forEach(function(el){ el.innerHTML = bannerHTML(p); }); }
+  function weekOf(dateObj, p){ var s = parseISO(p.start); if(!s) return 1; var d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()); return Math.floor(Math.round((d - s) / 86400000) / 7) + 1; }
+  function clampWeek(w){ return Math.min(12, Math.max(1, w)); }
+  function download(obj, name){ var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 0); }
+  function pickJSON(cb){ var i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = function(){ var f = i.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(){ try { cb(JSON.parse(r.result)); } catch(e){ alert('Invalid JSON file'); } }; r.readAsText(f); }; i.click(); }
+  function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var applied = applyHash();
+  return {get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
+})();
+
+(function(){
+  var KEY = 'zn_supp_tracker_v2', OLD = 'zn_supp_tracker_v1';
+  var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var $ = function(id){ return document.getElementById(id); };
+  var prof = ZN.ensureStart(ZN.get());
+  function def(){ return {supplements:[
+    {id:1, name:'Electrolytes (LMNT / Nuun etc.)', dose:'1 serving', tod:'Around workout', notes:''},
+    {id:2, name:'Creatine monohydrate', dose:'per label', tod:'Daily, anytime', notes:'Discuss with your MD if you have kidney concerns'},
+    {id:3, name:'Collagen peptides (optional)', dose:'per label', tod:'Morning', notes:'OTC'},
+    {id:4, name:'TRT (as prescribed)', dose:'MD sets', tod:'Per MD schedule', notes:'Adherence log only'}
+  ], adherence:{}, notes:{}, nextId:5}; }
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(localStorage.getItem(OLD)) || def(); } catch(e){ return def(); } }
+  var data = load(); data.adherence = data.adherence || {}; data.notes = data.notes || {};
+  function save(){ localStorage.setItem(KEY, JSON.stringify(data)); }
+  var curWeek = ZN.clampWeek(ZN.weekOf(new Date(), prof)), sel = curWeek;
+  var todayIdx = (new Date().getDay() + 6) % 7;
+  function dayDate(i){ var s = ZN.parseISO(prof.start); if(!s) return ''; var d = new Date(s); d.setDate(d.getDate() + (sel-1)*7 + i); return d.getDate(); }
+  function renderPicker(){ var s = $('weekSel'); s.innerHTML = ''; for(var w=1; w<=12; w++){ var o = document.createElement('option'); o.value = w; o.textContent = 'Week ' + w + (w === curWeek ? ' (now)' : ''); s.appendChild(o); } s.value = sel; }
+  function render(){
+    renderPicker();
+    var el = $('suppList'); el.innerHTML = ''; var tot = 0, on = 0;
+    data.supplements.forEach(function(s){
+      var c = document.createElement('div'); c.className = 'card supp';
+      var chips = DAYS.map(function(d, i){ var k = sel + ':' + s.id + ':' + i, v = !!data.adherence[k]; tot++; if(v) on++;
+        return '<button type="button" class="chip' + (v ? ' on' : '') + (sel === curWeek && i === todayIdx ? ' today' : '') + '" data-k="' + k + '" aria-pressed="' + v + '">' + d.charAt(0) + '<small>' + dayDate(i) + '</small></button>'; }).join('');
+      c.innerHTML = '<details><summary style="min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer"><b>' + ZN.esc(s.name) + '</b><span class="muted small">' + ZN.esc(s.dose) + ' · ' + ZN.esc(s.tod) + '</span></summary>' +
+        '<label>Name</label><input data-f="name" value="' + ZN.esc(s.name) + '">' +
+        '<div class="g2"><div><label>Dose</label><input data-f="dose" value="' + ZN.esc(s.dose) + '"></div><div><label>Time of day</label><input data-f="tod" value="' + ZN.esc(s.tod) + '"></div></div>' +
+        '<label>Notes</label><input data-f="notes" value="' + ZN.esc(s.notes || '') + '">' +
+        '<div class="toolbar"><button type="button" class="danger" data-del="1">Remove</button></div></details>' +
+        '<div class="chips">' + chips + '</div>';
+      c.querySelectorAll('[data-f]').forEach(function(inp){ inp.onchange = function(){ s[inp.getAttribute('data-f')] = inp.value; save(); }; });
+      c.querySelector('[data-del]').onclick = function(){ if(confirm('Remove ' + s.name + '?')){ data.supplements = data.supplements.filter(function(x){ return x.id !== s.id; }); save(); render(); } };
+      c.querySelectorAll('.chip').forEach(function(b){ b.onclick = function(){ var k = b.getAttribute('data-k'); data.adherence[k] = !data.adherence[k]; save(); render(); }; });
+      el.appendChild(c);
+    });
+    $('weekNotes').value = data.notes[sel] || '';
+    $('adh').textContent = 'Week ' + sel + ' adherence: ' + on + ' / ' + tot + ' check-offs' + (tot ? ' (' + Math.round(on/tot*100) + '%)' : '');
+  }
+  $('weekNotes').onchange = function(){ data.notes[sel] = this.value; save(); };
+  $('weekSel').onchange = function(){ sel = +this.value; render(); };
+  $('prevW').onclick = function(){ if(sel > 1){ sel--; render(); } };
+  $('nextW').onclick = function(){ if(sel < 12){ sel++; render(); } };
+  $('addSupp').onclick = function(){ data.supplements.push({id: data.nextId++, name:'New item', dose:'', tod:'', notes:''}); save(); render(); var all = $('suppList').querySelectorAll('details'); if(all.length) all[all.length-1].open = true; };
+  $('exportSupp').onclick = function(){ ZN.download(data, 'supplements-tracker.json'); };
+  $('importSupp').onclick = function(){ ZN.pickJSON(function(o){ data = o; data.adherence = data.adherence || {}; data.notes = data.notes || {}; save(); render(); alert('Imported'); }); };
+  $('resetSupp').onclick = function(){ if(confirm('Reset the supplement tracker to defaults?')){ data = def(); save(); render(); } };
+  ZN.fillBanners(); render();
+})();
+</script>
+</body>
+</html>
