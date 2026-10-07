@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1419">
+<link rel="icon" href="data:,">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Supplements — Hydration, Peptides &amp; Tracker</title>
 <style>
 :root{--bg:#0f1419;--card:#1a2332;--card2:#141c28;--border:#2d3a4d;--text:#e8eef6;--muted:#a7b6c6;--accent:#4aa3f5;--good:#3ecf8e;--warn:#f0b429;--danger:#f07178}
@@ -12,7 +14,7 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 a{color:var(--accent)}
 .topnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#0a0e14;border-bottom:1px solid var(--border)}
-.topnav a{flex:1 1 22%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
+.topnav a{flex:1 1 17%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 4px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
 .topnav a.active{border-color:var(--accent);background:#1d3350;color:#fff;font-weight:600}
 .wrap{max-width:1040px;margin:0 auto;padding:12px}
 h1{font-size:1.35rem;margin:6px 0 4px;line-height:1.25}
@@ -94,10 +96,11 @@ footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
 </head>
 <body>
 <nav class="topnav">
+  <a href="index.html">Home</a>
   <a href="workout-program.html">Workout</a>
-  <a href="cut-plan.html">Cut Plan</a>
-  <a class="active" href="supplements.html">Supplements</a>
-  <a href="trt-cut-structure.html">TRT + Cut</a>
+  <a href="cut-plan.html">Food</a>
+  <a class="active" href="supplements.html">Supps</a>
+  <a href="trt-cut-structure.html">TRT</a>
 </nav>
 <div class="wrap">
   <h1>Supplements: Hydration, Peptides &amp; Tracker</h1>
@@ -241,6 +244,7 @@ footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
       <button type="button" class="secondary" id="nextW" aria-label="Next week">›</button>
     </div>
   </div>
+  <div id="preNote"></div>
   <div id="suppList"></div>
   <div class="toolbar"><button type="button" id="addSupp">+ Add supplement / med</button></div>
   <div class="card">
@@ -260,9 +264,22 @@ footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
 /* Shared profile: generic defaults in source; personal stats only via URL hash -> localStorage */
 var ZN = (function(){
   var PK = 'zn_profile_v1', HK = 'zn_profile_hash_applied_v1';
-  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:null, overrides:null, updated:null};
+  var SCHEMA = 2, DEF_START = '2026-10-12', V1_AUTO_STARTS = ['2026-10-05'];
+  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:DEF_START, startManual:false, overrides:null, updated:null, v:SCHEMA};
+  /* Schema v2 migration: v1 auto-assigned the Monday of the first-open week as the start date.
+     Auto-assigned (or missing/invalid) v1 starts move to DEF_START; stats are untouched. */
+  function migrate(raw){
+    if(!raw || (raw.v || 1) >= SCHEMA) return raw;
+    var st = raw.start;
+    var auto = !st || !parseISO(st) || V1_AUTO_STARTS.indexOf(st) !== -1;
+    if(auto){ if(st && st !== DEF_START) raw.prevStart = st; raw.start = DEF_START; raw.startManual = false; }
+    else raw.startManual = true;
+    raw.v = SCHEMA;
+    try { localStorage.setItem(PK, JSON.stringify(raw)); } catch(e){}
+    return raw;
+  }
   function get(){
-    try { var p = JSON.parse(localStorage.getItem(PK)); return Object.assign({}, DEF, p || {}); }
+    try { var p = migrate(JSON.parse(localStorage.getItem(PK))); return Object.assign({}, DEF, p || {}); }
     catch(e){ return Object.assign({}, DEF); }
   }
   function isSet(){ return !!localStorage.getItem(PK); }
@@ -290,7 +307,7 @@ var ZN = (function(){
     if(num(q.get('loss')) != null) p.loss = num(q.get('loss'));
     if(num(q.get('pg')) != null) p.protPerLb = num(q.get('pg'));
     if(num(q.get('fp')) != null) p.fatPct = num(q.get('fp'));
-    if(q.has('start') && parseISO(q.get('start'))) p.start = q.get('start');
+    if(q.has('start') && parseISO(q.get('start'))){ p.start = q.get('start'); p.startManual = true; }
     var ov = {}; ['kcal','p','f','c'].forEach(function(k){ if(num(q.get(k)) != null) ov[k] = num(q.get(k)); });
     p.overrides = Object.keys(ov).length ? ov : null;
     p.hashApplied = true;
@@ -300,7 +317,21 @@ var ZN = (function(){
     return p;
   }
   function clearHash(){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
-  function ensureStart(p){ if(!p.start){ p.start = iso(mondayOf(new Date())); set(p); } return p; }
+  function ensureStart(p){ if(!p.start || !parseISO(p.start)){ p.start = DEF_START; p.startManual = false; } return p; }
+  function setStart(p, isoStr){ p.start = isoStr; p.startManual = true; return set(p); }
+  function addDays(d, n){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+  function daysBetween(a, b){ return Math.round((new Date(b.getFullYear(), b.getMonth(), b.getDate()) - new Date(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000); }
+  function daysUntilStart(p){ var s = parseISO(p.start); return s ? daysBetween(new Date(), s) : 0; }
+  function programEnd(p){ var s = parseISO(p.start); return s ? addDays(s, 83) : null; }
+  function fmt(d, opt){ return d ? d.toLocaleDateString(undefined, opt || {weekday:'short', month:'short', day:'numeric'}) : ''; }
+  /* Day shift when a module's stored anchor start differs from the current start (positive = start moved later). */
+  function anchorShift(anchor, p){ var a = parseISO(anchor), s = parseISO(p.start); return (a && s) ? daysBetween(a, s) : 0; }
+  function moduleAnchor(stored, p){ return stored || p.prevStart || p.start; }
+  function preStartHTML(p){
+    var n = daysUntilStart(p); if(n <= 0) return '';
+    return '<div class="okbox"><strong>Program starts ' + fmt(parseISO(p.start), {weekday:'short', month:'short', day:'numeric'}) + '</strong> (in ' + n + ' day' + (n === 1 ? '' : 's') + '). Week 1 runs ' + fmt(parseISO(p.start), {month:'short', day:'numeric'}) + '–' + fmt(addDays(parseISO(p.start), 6), {month:'short', day:'numeric'}) + '; Week 12 ends ' + fmt(programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '.</div>';
+  }
+  function registerSW(){ if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); } }
   function bmr(p){ var kg = p.weight * 0.453592, cm = p.heightIn * 2.54; return 10*kg + 6.25*cm - 5*p.age + (p.sex === 'f' ? -161 : 5); }
   function tdee(p){ return bmr(p) * p.act; }
   function targets(p){
@@ -325,7 +356,8 @@ var ZN = (function(){
   function pickJSON(cb){ var i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = function(){ var f = i.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(){ try { cb(JSON.parse(r.result)); } catch(e){ alert('Invalid JSON file'); } }; r.readAsText(f); }; i.click(); }
   function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var applied = applyHash();
-  return {get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
+  registerSW();
+  return {DEF_START:DEF_START, setStart:setStart, addDays:addDays, daysBetween:daysBetween, daysUntilStart:daysUntilStart, programEnd:programEnd, fmt:fmt, anchorShift:anchorShift, moduleAnchor:moduleAnchor, preStartHTML:preStartHTML, get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
 })();
 
 (function(){
@@ -342,17 +374,36 @@ var ZN = (function(){
   function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(localStorage.getItem(OLD)) || def(); } catch(e){ return def(); } }
   var data = load(); data.adherence = data.adherence || {}; data.notes = data.notes || {};
   function save(){ localStorage.setItem(KEY, JSON.stringify(data)); }
+  /* Re-key check-offs ("week:id:day") and week notes when the program start moves, so they stay on their real dates. */
+  function reanchor(){
+    var anchor = ZN.moduleAnchor(data.anchor, prof), shift = ZN.anchorShift(anchor, prof);
+    if(shift !== 0){
+      var na = {}, nn = {}, ws = Math.round(shift / 7);
+      Object.keys(data.adherence).forEach(function(k){
+        if(!data.adherence[k]) return;
+        var a = k.split(':'), off = (+a[0]-1)*7 + (+a[2]) - shift;
+        if(off >= 0 && off < 84) na[(Math.floor(off/7)+1) + ':' + a[1] + ':' + (off%7)] = true;
+      });
+      Object.keys(data.notes).forEach(function(w){ var t = +w - ws; if(!data.notes[w]) return; if(t < 1) t = 1; if(t > 12) return; nn[t] = (nn[t] ? nn[t] + '\n' : '') + data.notes[w]; });
+      data.adherence = na; data.notes = nn;
+    }
+    data.anchor = prof.start; save();
+  }
+  reanchor();
+  var inProgram = ZN.daysUntilStart(prof) <= 0 && ZN.weekOf(new Date(), prof) <= 12;
   var curWeek = ZN.clampWeek(ZN.weekOf(new Date(), prof)), sel = curWeek;
   var todayIdx = (new Date().getDay() + 6) % 7;
-  function dayDate(i){ var s = ZN.parseISO(prof.start); if(!s) return ''; var d = new Date(s); d.setDate(d.getDate() + (sel-1)*7 + i); return d.getDate(); }
-  function renderPicker(){ var s = $('weekSel'); s.innerHTML = ''; for(var w=1; w<=12; w++){ var o = document.createElement('option'); o.value = w; o.textContent = 'Week ' + w + (w === curWeek ? ' (now)' : ''); s.appendChild(o); } s.value = sel; }
+  function dayDate(i){ var s = ZN.parseISO(prof.start); if(!s) return ''; return ZN.addDays(s, (sel-1)*7 + i).getDate(); }
+  function renderPicker(){ var s = $('weekSel'); s.innerHTML = ''; for(var w=1; w<=12; w++){ var o = document.createElement('option'); o.value = w; o.textContent = 'Week ' + w + ' · ' + ZN.fmt(ZN.addDays(ZN.parseISO(prof.start), (w-1)*7), {month:'short', day:'numeric'}) + (inProgram && w === curWeek ? ' (now)' : ''); s.appendChild(o); } s.value = sel; }
   function render(){
     renderPicker();
+    var pre = ZN.preStartHTML(prof);
+    $('preNote').innerHTML = pre ? pre.replace(/<\/div>\s*$/, ' Check-offs begin with Week 1. Keep taking anything your MD already prescribed as usual.</div>') : '';
     var el = $('suppList'); el.innerHTML = ''; var tot = 0, on = 0;
     data.supplements.forEach(function(s){
       var c = document.createElement('div'); c.className = 'card supp';
       var chips = DAYS.map(function(d, i){ var k = sel + ':' + s.id + ':' + i, v = !!data.adherence[k]; tot++; if(v) on++;
-        return '<button type="button" class="chip' + (v ? ' on' : '') + (sel === curWeek && i === todayIdx ? ' today' : '') + '" data-k="' + k + '" aria-pressed="' + v + '">' + d.charAt(0) + '<small>' + dayDate(i) + '</small></button>'; }).join('');
+        return '<button type="button" class="chip' + (v ? ' on' : '') + (inProgram && sel === curWeek && i === todayIdx ? ' today' : '') + '" data-k="' + k + '" aria-pressed="' + v + '">' + d.charAt(0) + '<small>' + dayDate(i) + '</small></button>'; }).join('');
       c.innerHTML = '<details><summary style="min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer"><b>' + ZN.esc(s.name) + '</b><span class="muted small">' + ZN.esc(s.dose) + ' · ' + ZN.esc(s.tod) + '</span></summary>' +
         '<label>Name</label><input data-f="name" value="' + ZN.esc(s.name) + '">' +
         '<div class="g2"><div><label>Dose</label><input data-f="dose" value="' + ZN.esc(s.dose) + '"></div><div><label>Time of day</label><input data-f="tod" value="' + ZN.esc(s.tod) + '"></div></div>' +

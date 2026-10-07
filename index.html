@@ -1,11 +1,225 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#111827"><title>Lift Log</title>
-<style>body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#111827;color:#f9fafb;padding:24px 16px}
-h1{font-size:1.6rem;margin:8px 0 20px}a{display:block;background:#1f2937;color:#f9fafb;text-decoration:none;border-radius:14px;padding:20px;margin:0 0 14px;font-size:1.15rem;font-weight:600;border:1px solid #374151}
-a span{display:block;font-weight:400;font-size:.9rem;color:#9ca3af;margin-top:4px}</style></head><body>
-<h1>Lift Log</h1>
-<a href="workout-program.html">Today's workout<span>Follow the program and log sets</span></a>
-<a href="cut-plan.html">Food &amp; weigh-ins<span>Daily macros and weekly check-in</span></a>
-<a href="supplements.html">Supplements<span>Daily checklist and product links</span></a>
-<a href="trt-cut-structure.html">TRT &amp; the cut<span>Notes for your doctor visits</span></a>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<link rel="icon" href="data:,">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lift Log">
+<title>Lift Log</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2332;--card2:#141c28;--border:#2d3a4d;--text:#e8eef6;--muted:#a7b6c6;--accent:#4aa3f5;--good:#3ecf8e;--warn:#f0b429;--danger:#f07178}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:var(--accent)}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#0a0e14;border-bottom:1px solid var(--border)}
+.topnav a{flex:1 1 17%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 4px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
+.topnav a.active{border-color:var(--accent);background:#1d3350;color:#fff;font-weight:600}
+.wrap{max-width:1040px;margin:0 auto;padding:12px}
+h1{font-size:1.35rem;margin:6px 0 4px;line-height:1.25}
+h2{font-size:1.12rem;margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:14px 0 6px;color:#c3d3e6}
+p{margin:.5em 0}
+.muted{color:var(--muted);font-size:.9rem}
+.small{font-size:.82rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
+.assume{background:#1c2838;border-left:4px solid var(--warn);padding:10px 12px;margin:12px 0;border-radius:0 10px 10px 0;font-size:.9rem}
+.disclaimer{background:#2a1a1c;border:1px solid #5a3038;border-radius:12px;padding:12px;margin:12px 0;font-size:.9rem}
+.disclaimer strong{color:var(--danger)}
+details.disclaimer summary,details.card summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{font:inherit;font-size:16px;width:100%;min-height:44px;background:#111923;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+textarea{min-height:84px}
+button,.btn{font:inherit;font-size:1rem;min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;touch-action:manipulation}
+button.secondary{background:#2a3548}
+button.danger{background:#8b3a42}
+button.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+button.on{background:var(--good);color:#06120c}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.toolbar>button{flex:1 1 auto}
+.grid{display:grid;gap:10px;grid-template-columns:1fr}
+.g2{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.g2>*,.grid>*{min-width:0}
+.sticky{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.97);border-bottom:1px solid var(--border);padding:8px 12px;margin:0 -12px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.badge{display:inline-block;font-size:.72rem;padding:2px 7px;border-radius:5px;background:#243044;color:#a8c4e0;margin:0 4px 4px 0}
+.badge.otc{background:#1a3a2a;color:#7ddea8}.badge.rx{background:#3a2a1a;color:#f0c070}.badge.no{background:#3a1a1a;color:#f0a0a0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.4rem;color:var(--good);line-height:1.2}
+.bars{display:flex;align-items:flex-end;gap:3px;height:90px;margin:8px 0}
+.bars i{flex:1;display:block;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.bars.green i{background:var(--good)}
+.warnbox{background:#2b2410;border:1px solid #6b5520;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.okbox{background:#10291d;border:1px solid #1f6b47;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.chk{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:6px 0;cursor:pointer}
+.chk input{width:26px;height:26px;min-height:26px;flex:0 0 26px;margin:2px 0 0}
+table.resp{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0}
+table.resp th,table.resp td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+table.resp th{background:var(--card2)}
+footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
+@media (max-width:640px){
+  table.resp thead{display:none}
+  table.resp,table.resp tbody,table.resp tr,table.resp td{display:block;width:100%}
+  table.resp tr{border:1px solid var(--border);border-radius:10px;margin:8px 0;padding:4px 12px;background:var(--card2)}
+  table.resp td{border:0;border-bottom:1px solid #222d3c;display:flex;justify-content:space-between;gap:12px;padding:8px 0;text-align:right}
+  table.resp td:last-child{border-bottom:0}
+  table.resp td::before{content:attr(data-label);color:var(--muted);font-size:.85rem;text-align:left;flex:0 0 auto}
+}
+@media (min-width:760px){
+  .wrap{padding:20px}
+  h1{font-size:1.6rem}
+  .topnav a{flex:0 1 auto;padding:6px 14px}
+  .grid.md2{grid-template-columns:1fr 1fr}
+  .grid.md3{grid-template-columns:repeat(3,1fr)}
+  .grid.md4{grid-template-columns:repeat(4,1fr)}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .sticky{margin:0 -20px;padding:8px 20px}
+}
+
+.home{padding-top:14px}
+.status{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin:0 0 14px}
+.status .big{font-size:1.25rem;font-weight:700;line-height:1.25}
+.logfood{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:76px;border-radius:16px;background:var(--good);color:#06120c;font-size:1.35rem;font-weight:800;text-decoration:none;margin:0 0 16px;box-shadow:0 4px 18px rgba(62,207,142,.25)}
+.logfood small{display:block;font-size:.85rem;font-weight:600;opacity:.8}
+a.tile{display:block;background:var(--card);color:var(--text);text-decoration:none;border-radius:14px;padding:18px;margin:0 0 12px;font-size:1.12rem;font-weight:600;border:1px solid var(--border);min-height:44px}
+a.tile span{display:block;font-weight:400;font-size:.9rem;color:var(--muted);margin-top:4px}
+.pbar{height:10px;background:#243044;border-radius:6px;overflow:hidden;margin-top:8px}
+.pbar i{display:block;height:100%;background:var(--good)}
+.pbar i.over{background:var(--danger)}
+</style>
+</head>
+<body>
+<div class="wrap home">
+  <h1>Lift Log</h1>
+  <div class="status" id="status"></div>
+  <a class="logfood" href="cut-plan.html#food">🍽&nbsp;Log food</a>
+  <a class="tile" href="workout-program.html">🏋️ Today’s workout<span id="woSub">Follow the program and log sets</span></a>
+  <a class="tile" href="cut-plan.html">⚖️ Cut plan &amp; weigh-ins<span>Daily totals, weekly check-in, targets, progress</span></a>
+  <a class="tile" href="supplements.html">💊 Supplements<span>Daily checklist and product info</span></a>
+  <a class="tile" href="trt-cut-structure.html">🩺 TRT &amp; the cut<span>Notes for your doctor visits</span></a>
+  <p class="muted small">Everything saves on this phone (no account). Export backups from the Cut plan and Workout pages now and then. Not medical advice; review with your physician.</p>
+</div>
+<script>
+/* Shared profile: generic defaults in source; personal stats only via URL hash -> localStorage */
+var ZN = (function(){
+  var PK = 'zn_profile_v1', HK = 'zn_profile_hash_applied_v1';
+  var SCHEMA = 2, DEF_START = '2026-10-12', V1_AUTO_STARTS = ['2026-10-05'];
+  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:DEF_START, startManual:false, overrides:null, updated:null, v:SCHEMA};
+  /* Schema v2 migration: v1 auto-assigned the Monday of the first-open week as the start date.
+     Auto-assigned (or missing/invalid) v1 starts move to DEF_START; stats are untouched. */
+  function migrate(raw){
+    if(!raw || (raw.v || 1) >= SCHEMA) return raw;
+    var st = raw.start;
+    var auto = !st || !parseISO(st) || V1_AUTO_STARTS.indexOf(st) !== -1;
+    if(auto){ if(st && st !== DEF_START) raw.prevStart = st; raw.start = DEF_START; raw.startManual = false; }
+    else raw.startManual = true;
+    raw.v = SCHEMA;
+    try { localStorage.setItem(PK, JSON.stringify(raw)); } catch(e){}
+    return raw;
+  }
+  function get(){
+    try { var p = migrate(JSON.parse(localStorage.getItem(PK))); return Object.assign({}, DEF, p || {}); }
+    catch(e){ return Object.assign({}, DEF); }
+  }
+  function isSet(){ return !!localStorage.getItem(PK); }
+  function set(p){ p.updated = new Date().toISOString(); localStorage.setItem(PK, JSON.stringify(p)); return p; }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
+  function mondayOf(d){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); var k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x; }
+  function iso(d){ var m = d.getMonth()+1, dd = d.getDate(); return d.getFullYear() + '-' + (m<10?'0':'') + m + '-' + (dd<10?'0':'') + dd; }
+  function parseISO(s){ if(!s) return null; var a = String(s).split('-'); if(a.length<3) return null; var d = new Date(+a[0], +a[1]-1, +a[2]); return isNaN(d) ? null : d; }
+  /* Supported hash keys: h (inches) | hcm, w (lb), age, sex (m/f), act, loss (lb/wk), pg (protein g/lb), fp (fat %), kcal, p, f, c, start (YYYY-MM-DD) */
+  function applyHash(){
+    var h = (location.hash || '').replace(/^#/, '');
+    if(!h) return null;
+    var q; try { q = new URLSearchParams(h); } catch(e){ return null; }
+    var keys = ['h','hcm','w','age','sex','act','loss','pg','fp','kcal','p','f','c','start'];
+    var any = keys.some(function(k){ return q.has(k); });
+    if(!any) return null;
+    if(localStorage.getItem(HK) === h){ clearHash(); return null; }
+    var p = get();
+    if(num(q.get('h')) != null) p.heightIn = num(q.get('h'));
+    if(num(q.get('hcm')) != null) p.heightIn = Math.round(num(q.get('hcm')) / 2.54 * 10) / 10;
+    if(num(q.get('w')) != null) p.weight = num(q.get('w'));
+    if(num(q.get('age')) != null) p.age = num(q.get('age'));
+    if(q.has('sex')) p.sex = /^f/i.test(q.get('sex')) ? 'f' : 'm';
+    if(num(q.get('act')) != null) p.act = num(q.get('act'));
+    if(num(q.get('loss')) != null) p.loss = num(q.get('loss'));
+    if(num(q.get('pg')) != null) p.protPerLb = num(q.get('pg'));
+    if(num(q.get('fp')) != null) p.fatPct = num(q.get('fp'));
+    if(q.has('start') && parseISO(q.get('start'))){ p.start = q.get('start'); p.startManual = true; }
+    var ov = {}; ['kcal','p','f','c'].forEach(function(k){ if(num(q.get(k)) != null) ov[k] = num(q.get(k)); });
+    p.overrides = Object.keys(ov).length ? ov : null;
+    p.hashApplied = true;
+    set(p);
+    localStorage.setItem(HK, h);
+    clearHash();
+    return p;
+  }
+  function clearHash(){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  function ensureStart(p){ if(!p.start || !parseISO(p.start)){ p.start = DEF_START; p.startManual = false; } return p; }
+  function setStart(p, isoStr){ p.start = isoStr; p.startManual = true; return set(p); }
+  function addDays(d, n){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+  function daysBetween(a, b){ return Math.round((new Date(b.getFullYear(), b.getMonth(), b.getDate()) - new Date(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000); }
+  function daysUntilStart(p){ var s = parseISO(p.start); return s ? daysBetween(new Date(), s) : 0; }
+  function programEnd(p){ var s = parseISO(p.start); return s ? addDays(s, 83) : null; }
+  function fmt(d, opt){ return d ? d.toLocaleDateString(undefined, opt || {weekday:'short', month:'short', day:'numeric'}) : ''; }
+  /* Day shift when a module's stored anchor start differs from the current start (positive = start moved later). */
+  function anchorShift(anchor, p){ var a = parseISO(anchor), s = parseISO(p.start); return (a && s) ? daysBetween(a, s) : 0; }
+  function moduleAnchor(stored, p){ return stored || p.prevStart || p.start; }
+  function preStartHTML(p){
+    var n = daysUntilStart(p); if(n <= 0) return '';
+    return '<div class="okbox"><strong>Program starts ' + fmt(parseISO(p.start), {weekday:'short', month:'short', day:'numeric'}) + '</strong> (in ' + n + ' day' + (n === 1 ? '' : 's') + '). Week 1 runs ' + fmt(parseISO(p.start), {month:'short', day:'numeric'}) + '–' + fmt(addDays(parseISO(p.start), 6), {month:'short', day:'numeric'}) + '; Week 12 ends ' + fmt(programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '.</div>';
+  }
+  function registerSW(){ if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); } }
+  function bmr(p){ var kg = p.weight * 0.453592, cm = p.heightIn * 2.54; return 10*kg + 6.25*cm - 5*p.age + (p.sex === 'f' ? -161 : 5); }
+  function tdee(p){ return bmr(p) * p.act; }
+  function targets(p){
+    var t = tdee(p), cal = Math.round((t - p.loss * 500) / 50) * 50;
+    var floor = p.sex === 'f' ? 1200 : 1500; if(cal < floor) cal = floor;
+    var pr = Math.round(p.weight * p.protPerLb / 5) * 5;
+    var f = Math.round(cal * (p.fatPct / 100) / 9);
+    var c = Math.max(50, Math.round((cal - pr*4 - f*9) / 4));
+    var maint = Math.round(t / 50) * 50;
+    return {cal:cal, p:pr, f:f, c:c, maint:maint, bmr:bmr(p), tdee:t, deficit:t - cal};
+  }
+  function bmi(p){ return p.weight / (p.heightIn * p.heightIn) * 703; }
+  function ftin(inches){ var ft = Math.floor(inches / 12), i = Math.round((inches - ft*12) * 10) / 10; if(i >= 12){ ft++; i = 0; } return ft + "'" + i + '"'; }
+  function bannerHTML(p){
+    var src = isSet() ? 'saved profile on this device' : 'generic placeholder defaults (prefill via URL hash or edit in Cut Plan)';
+    return '<strong>Assumptions (' + src + '):</strong> ' + (p.sex === 'f' ? 'Female' : 'Male') + ' · age ' + p.age + ' · ' + ftin(p.heightIn) + ' (' + Math.round(p.heightIn*2.54*10)/10 + ' cm) · ' + p.weight + ' lb · activity ×' + p.act + ' · target loss ~' + p.loss + ' lb/wk. Edit anytime in <a href="cut-plan.html">Cut Plan</a>.';
+  }
+  function fillBanners(){ var p = get(); document.querySelectorAll('[data-zn-banner]').forEach(function(el){ el.innerHTML = bannerHTML(p); }); }
+  function weekOf(dateObj, p){ var s = parseISO(p.start); if(!s) return 1; var d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()); return Math.floor(Math.round((d - s) / 86400000) / 7) + 1; }
+  function clampWeek(w){ return Math.min(12, Math.max(1, w)); }
+  function download(obj, name){ var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 0); }
+  function pickJSON(cb){ var i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = function(){ var f = i.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(){ try { cb(JSON.parse(r.result)); } catch(e){ alert('Invalid JSON file'); } }; r.readAsText(f); }; i.click(); }
+  function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var applied = applyHash();
+  registerSW();
+  return {DEF_START:DEF_START, setStart:setStart, addDays:addDays, daysBetween:daysBetween, daysUntilStart:daysUntilStart, programEnd:programEnd, fmt:fmt, anchorShift:anchorShift, moduleAnchor:moduleAnchor, preStartHTML:preStartHTML, get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
+})();
+
+(function(){
+  var p = ZN.ensureStart(ZN.get()), $ = function(id){ return document.getElementById(id); };
+  var n = ZN.daysUntilStart(p), w = ZN.weekOf(new Date(), p), sd = ZN.parseISO(p.start);
+  var phase = function(w){ return w <= 2 ? 'Ramp-in' : w <= 5 ? 'Base' : w <= 8 ? 'Build' : w <= 11 ? 'Intensify' : 'Deload + review'; };
+  var head, sub;
+  if(n > 0){ head = 'Program starts ' + ZN.fmt(sd); sub = 'In ' + n + ' day' + (n === 1 ? '' : 's') + ' · Week 12 ends ' + ZN.fmt(ZN.programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '. Start logging food now to practice.'; $('woSub').textContent = 'Preview Week 1 · Day A'; }
+  else if(w <= 12){ head = 'Week ' + w + ' of 12 · ' + phase(w); sub = ZN.fmt(new Date(), {weekday:'long', month:'short', day:'numeric'}); }
+  else { head = 'Phase 1 complete 🎉'; sub = 'Plan your diet break and Phase 2 with your MD.'; }
+  var t = null, eaten = 0;
+  try { var cut = JSON.parse(localStorage.getItem('zn_cut_v2') || '{}'); t = cut.targets; } catch(e){}
+  if(!t){ var tt = ZN.targets(p); t = {cal:tt.cal, p:tt.p}; }
+  try { var food = JSON.parse(localStorage.getItem('zn_food_v1') || '{}'); (food.entries && food.entries[ZN.iso(new Date())] || []).forEach(function(e){ eaten += +e.kcal || 0; }); } catch(e){}
+  var rem = Math.round(t.cal - eaten);
+  $('status').innerHTML = '<div class="big">' + head + '</div><div class="muted small">' + sub + '</div>' +
+    '<div class="small" style="margin-top:8px">Today: <b>' + Math.round(eaten) + '</b> / ' + t.cal + ' kcal · ' + (rem >= 0 ? rem + ' left' : (-rem) + ' over') + '</div><div class="pbar"><i class="' + (rem < 0 ? 'over' : '') + '" style="width:' + Math.min(100, eaten / t.cal * 100) + '%"></i></div>';
+})();
+</script>
+</body>
+</html>
