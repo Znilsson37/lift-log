@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<link rel="icon" href="data:,">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Lift Progress</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2332;--card2:#141c28;--border:#2d3a4d;--text:#e8eef6;--muted:#a7b6c6;--accent:#4aa3f5;--good:#3ecf8e;--warn:#f0b429;--danger:#f07178}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+a{color:var(--accent)}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#0a0e14;border-bottom:1px solid var(--border)}
+.topnav a{flex:1 1 22%;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 4px;border-radius:8px;background:var(--card);border:1px solid var(--border);text-decoration:none;font-size:.85rem;line-height:1.2}
+.topnav a.active{border-color:var(--accent);background:#1d3350;color:#fff;font-weight:600}
+.wrap{max-width:1040px;margin:0 auto;padding:12px}
+h1{font-size:1.35rem;margin:6px 0 4px;line-height:1.25}
+h2{font-size:1.12rem;margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:14px 0 6px;color:#c3d3e6}
+p{margin:.5em 0}
+.muted{color:var(--muted);font-size:.9rem}
+.small{font-size:.82rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
+.assume{background:#1c2838;border-left:4px solid var(--warn);padding:10px 12px;margin:12px 0;border-radius:0 10px 10px 0;font-size:.9rem}
+.disclaimer{background:#2a1a1c;border:1px solid #5a3038;border-radius:12px;padding:12px;margin:12px 0;font-size:.9rem}
+.disclaimer strong{color:var(--danger)}
+details.disclaimer summary,details.card summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{font:inherit;font-size:16px;width:100%;min-height:44px;background:#111923;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+textarea{min-height:84px}
+button,.btn{font:inherit;font-size:1rem;min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;touch-action:manipulation}
+button.secondary{background:#2a3548}
+button.danger{background:#8b3a42}
+button.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+button.on{background:var(--good);color:#06120c}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.toolbar>button{flex:1 1 auto}
+.grid{display:grid;gap:10px;grid-template-columns:1fr}
+.g2{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.g2>*,.grid>*{min-width:0}
+.sticky{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.97);border-bottom:1px solid var(--border);padding:8px 12px;margin:0 -12px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.badge{display:inline-block;font-size:.72rem;padding:2px 7px;border-radius:5px;background:#243044;color:#a8c4e0;margin:0 4px 4px 0}
+.badge.otc{background:#1a3a2a;color:#7ddea8}.badge.rx{background:#3a2a1a;color:#f0c070}.badge.no{background:#3a1a1a;color:#f0a0a0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.4rem;color:var(--good);line-height:1.2}
+.bars{display:flex;align-items:flex-end;gap:3px;height:90px;margin:8px 0}
+.bars i{flex:1;display:block;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.bars.green i{background:var(--good)}
+.warnbox{background:#2b2410;border:1px solid #6b5520;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.okbox{background:#10291d;border:1px solid #1f6b47;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.chk{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:6px 0;cursor:pointer}
+.chk input{width:26px;height:26px;min-height:26px;flex:0 0 26px;margin:2px 0 0}
+table.resp{width:100%;border-collapse:collapse;font-size:.9rem;margin:8px 0}
+table.resp th,table.resp td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+table.resp th{background:var(--card2)}
+footer{margin:28px 0 16px;font-size:.82rem;color:#8a9bab}
+@media (max-width:640px){
+  table.resp thead{display:none}
+  table.resp,table.resp tbody,table.resp tr,table.resp td{display:block;width:100%}
+  table.resp tr{border:1px solid var(--border);border-radius:10px;margin:8px 0;padding:4px 12px;background:var(--card2)}
+  table.resp td{border:0;border-bottom:1px solid #222d3c;display:flex;justify-content:space-between;gap:12px;padding:8px 0;text-align:right}
+  table.resp td:last-child{border-bottom:0}
+  table.resp td::before{content:attr(data-label);color:var(--muted);font-size:.85rem;text-align:left;flex:0 0 auto}
+}
+@media (min-width:760px){
+  .wrap{padding:20px}
+  h1{font-size:1.6rem}
+  .topnav a{flex:0 1 auto;padding:6px 14px}
+  .grid.md2{grid-template-columns:1fr 1fr}
+  .grid.md3{grid-template-columns:repeat(3,1fr)}
+  .grid.md4{grid-template-columns:repeat(4,1fr)}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .sticky{margin:0 -20px;padding:8px 20px}
+}
+
+.lift svg{display:block;width:100%;height:auto;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.78rem;color:var(--muted);margin-top:4px}
+.legend i{display:inline-block;width:16px;border-top:3px solid;vertical-align:middle;margin-right:4px}
+.legend i.d{border-top-style:dashed}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.st div{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center}
+.st b{display:block;font-size:1.02rem}
+.st span{font-size:.72rem;color:var(--muted)}
+.vname{font-size:.85rem;font-weight:600;margin-top:10px}
+.lift h3{margin:0}
+.empty{text-align:center;padding:28px 14px}
+.empty .big{font-size:2.4rem}
+</style>
+</head>
+<body>
+<nav class="topnav"></nav>
+<div class="wrap">
+  <h1>Lift Progress</h1>
+  <p class="muted small">Built from your workout logs on this phone. Weight lifts show the top set and estimated 1-rep max (Epley). Bodyweight and timed moves show your best reps, seconds, or meters.</p>
+  <div id="out"></div>
+</div>
+<script>
+/* Shared profile: generic defaults in source; personal stats only via URL hash -> localStorage */
+var ZN = (function(){
+  var PK = 'zn_profile_v1', HK = 'zn_profile_hash_applied_v1';
+  var SCHEMA = 2, DEF_START = '2026-10-12', V1_AUTO_STARTS = ['2026-10-05'];
+  var DEF = {sex:'m', age:35, heightIn:70, weight:180, act:1.55, loss:1.0, protPerLb:0.8, fatPct:28, start:DEF_START, startManual:false, overrides:null, updated:null, v:SCHEMA};
+  /* Schema v2 migration: v1 auto-assigned the Monday of the first-open week as the start date.
+     Auto-assigned (or missing/invalid) v1 starts move to DEF_START; stats are untouched. */
+  function migrate(raw){
+    if(!raw || (raw.v || 1) >= SCHEMA) return raw;
+    var st = raw.start;
+    var auto = !st || !parseISO(st) || V1_AUTO_STARTS.indexOf(st) !== -1;
+    if(auto){ if(st && st !== DEF_START) raw.prevStart = st; raw.start = DEF_START; raw.startManual = false; }
+    else raw.startManual = true;
+    raw.v = SCHEMA;
+    try { localStorage.setItem(PK, JSON.stringify(raw)); } catch(e){}
+    return raw;
+  }
+  function get(){
+    try { var p = migrate(JSON.parse(localStorage.getItem(PK))); return Object.assign({}, DEF, p || {}); }
+    catch(e){ return Object.assign({}, DEF); }
+  }
+  function isSet(){ return !!localStorage.getItem(PK); }
+  function set(p){ p.updated = new Date().toISOString(); localStorage.setItem(PK, JSON.stringify(p)); return p; }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? null : n; }
+  function mondayOf(d){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); var k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); return x; }
+  function iso(d){ var m = d.getMonth()+1, dd = d.getDate(); return d.getFullYear() + '-' + (m<10?'0':'') + m + '-' + (dd<10?'0':'') + dd; }
+  function parseISO(s){ if(!s) return null; var a = String(s).split('-'); if(a.length<3) return null; var d = new Date(+a[0], +a[1]-1, +a[2]); return isNaN(d) ? null : d; }
+  /* Supported hash keys: h (inches) | hcm, w (lb), age, sex (m/f), act, loss (lb/wk), pg (protein g/lb), fp (fat %), kcal, p, f, c, start (YYYY-MM-DD) */
+  function applyHash(){
+    var h = (location.hash || '').replace(/^#/, '');
+    if(!h) return null;
+    var q; try { q = new URLSearchParams(h); } catch(e){ return null; }
+    var keys = ['h','hcm','w','age','sex','act','loss','pg','fp','kcal','p','f','c','start'];
+    var any = keys.some(function(k){ return q.has(k); });
+    if(!any) return null;
+    if(localStorage.getItem(HK) === h){ clearHash(); return null; }
+    var p = get();
+    if(num(q.get('h')) != null) p.heightIn = num(q.get('h'));
+    if(num(q.get('hcm')) != null) p.heightIn = Math.round(num(q.get('hcm')) / 2.54 * 10) / 10;
+    if(num(q.get('w')) != null) p.weight = num(q.get('w'));
+    if(num(q.get('age')) != null) p.age = num(q.get('age'));
+    if(q.has('sex')) p.sex = /^f/i.test(q.get('sex')) ? 'f' : 'm';
+    if(num(q.get('act')) != null) p.act = num(q.get('act'));
+    if(num(q.get('loss')) != null) p.loss = num(q.get('loss'));
+    if(num(q.get('pg')) != null) p.protPerLb = num(q.get('pg'));
+    if(num(q.get('fp')) != null) p.fatPct = num(q.get('fp'));
+    if(q.has('start') && parseISO(q.get('start'))){ p.start = q.get('start'); p.startManual = true; }
+    var ov = {}; ['kcal','p','f','c'].forEach(function(k){ if(num(q.get(k)) != null) ov[k] = num(q.get(k)); });
+    p.overrides = Object.keys(ov).length ? ov : null;
+    p.hashApplied = true;
+    set(p);
+    localStorage.setItem(HK, h);
+    clearHash();
+    return p;
+  }
+  function clearHash(){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  function ensureStart(p){ if(!p.start || !parseISO(p.start)){ p.start = DEF_START; p.startManual = false; } return p; }
+  function setStart(p, isoStr){ p.start = isoStr; p.startManual = true; return set(p); }
+  function addDays(d, n){ var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+  function daysBetween(a, b){ return Math.round((new Date(b.getFullYear(), b.getMonth(), b.getDate()) - new Date(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000); }
+  function daysUntilStart(p){ var s = parseISO(p.start); return s ? daysBetween(new Date(), s) : 0; }
+  function programEnd(p){ var s = parseISO(p.start); return s ? addDays(s, 83) : null; }
+  function fmt(d, opt){ return d ? d.toLocaleDateString(undefined, opt || {weekday:'short', month:'short', day:'numeric'}) : ''; }
+  /* Day shift when a module's stored anchor start differs from the current start (positive = start moved later). */
+  function anchorShift(anchor, p){ var a = parseISO(anchor), s = parseISO(p.start); return (a && s) ? daysBetween(a, s) : 0; }
+  function moduleAnchor(stored, p){ return stored || p.prevStart || p.start; }
+  function preStartHTML(p){
+    var n = daysUntilStart(p); if(n <= 0) return '';
+    return '<div class="okbox"><strong>Program starts ' + fmt(parseISO(p.start), {weekday:'short', month:'short', day:'numeric'}) + '</strong> (in ' + n + ' day' + (n === 1 ? '' : 's') + '). Week 1 runs ' + fmt(parseISO(p.start), {month:'short', day:'numeric'}) + '–' + fmt(addDays(parseISO(p.start), 6), {month:'short', day:'numeric'}) + '; Week 12 ends ' + fmt(programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '.</div>';
+  }
+  function registerSW(){ if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); } }
+  function bmr(p){ var kg = p.weight * 0.453592, cm = p.heightIn * 2.54; return 10*kg + 6.25*cm - 5*p.age + (p.sex === 'f' ? -161 : 5); }
+  function tdee(p){ return bmr(p) * p.act; }
+  function targets(p){
+    var t = tdee(p), cal = Math.round((t - p.loss * 500) / 50) * 50;
+    var floor = p.sex === 'f' ? 1200 : 1500; if(cal < floor) cal = floor;
+    var pr = Math.round(p.weight * p.protPerLb / 5) * 5;
+    var f = Math.round(cal * (p.fatPct / 100) / 9);
+    var c = Math.max(50, Math.round((cal - pr*4 - f*9) / 4));
+    var maint = Math.round(t / 50) * 50;
+    return {cal:cal, p:pr, f:f, c:c, maint:maint, bmr:bmr(p), tdee:t, deficit:t - cal};
+  }
+  function bmi(p){ return p.weight / (p.heightIn * p.heightIn) * 703; }
+  function ftin(inches){ var ft = Math.floor(inches / 12), i = Math.round((inches - ft*12) * 10) / 10; if(i >= 12){ ft++; i = 0; } return ft + "'" + i + '"'; }
+  function bannerHTML(p){
+    var src = isSet() ? 'saved profile on this device' : 'generic placeholder defaults (prefill via URL hash or edit in Cut Plan)';
+    return '<strong>Assumptions (' + src + '):</strong> ' + (p.sex === 'f' ? 'Female' : 'Male') + ' · age ' + p.age + ' · ' + ftin(p.heightIn) + ' (' + Math.round(p.heightIn*2.54*10)/10 + ' cm) · ' + p.weight + ' lb · activity ×' + p.act + ' · target loss ~' + p.loss + ' lb/wk. Edit anytime in <a href="cut-plan.html">Cut Plan</a>.';
+  }
+  function fillBanners(){ var p = get(); document.querySelectorAll('[data-zn-banner]').forEach(function(el){ el.innerHTML = bannerHTML(p); }); }
+  function weekOf(dateObj, p){ var s = parseISO(p.start); if(!s) return 1; var d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()); return Math.floor(Math.round((d - s) / 86400000) / 7) + 1; }
+  function clampWeek(w){ return Math.min(12, Math.max(1, w)); }
+  function download(obj, name){ var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function(){ a.remove(); }, 0); }
+  function pickJSON(cb){ var i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = function(){ var f = i.files[0]; if(!f) return; var r = new FileReader(); r.onload = function(){ try { cb(JSON.parse(r.result)); } catch(e){ alert('Invalid JSON file'); } }; r.readAsText(f); }; i.click(); }
+  function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var applied = applyHash();
+  registerSW();
+  return {DEF_START:DEF_START, setStart:setStart, addDays:addDays, daysBetween:daysBetween, daysUntilStart:daysUntilStart, programEnd:programEnd, fmt:fmt, anchorShift:anchorShift, moduleAnchor:moduleAnchor, preStartHTML:preStartHTML, get:get, set:set, isSet:isSet, applied:applied, ensureStart:ensureStart, bmr:bmr, tdee:tdee, targets:targets, bmi:bmi, ftin:ftin, bannerHTML:bannerHTML, fillBanners:fillBanners, weekOf:weekOf, clampWeek:clampWeek, iso:iso, parseISO:parseISO, mondayOf:mondayOf, download:download, pickJSON:pickJSON, esc:esc};
+})();
+
+(function(){
+  document.querySelector('.topnav').outerHTML = '<nav class="topnav"><a href="index.html">Home</a><a href="workout-program.html">Workout</a><a class="active" href="progress.html">Lifts</a><a href="cut-plan.html">Weigh-in</a></nav>';
+  var prof = ZN.ensureStart(ZN.get()), S = ZN.parseISO(prof.start), esc = ZN.esc;
+  /* exercise catalog (ids match workout-program.html; data format there is unchanged) */
+  var DAYS = {A:'Day A: Squat · Push · Pull', B:'Day B: Hinge · Overhead · Pulldown', C:'Day C: Legs · Incline · Row · Abs'};
+  var EX = [
+    ['A','sq','Squat pattern'],['A','dbb','Horizontal press'],['A','csr','Row'],['A','rdl','Hinge accessory'],['A','db','Core: dead bug','reps'],['A','pal','Core: Pallof press','reps'],
+    ['B','tb','Hinge'],['B','ohp','Overhead press'],['B','pd','Vertical pull'],['B','ss','Single-leg'],['B','fp','Upper back / shoulders'],['B','carry','Core: carry','meters'],
+    ['C','lp','Squat pattern 2'],['C','idb','Incline press'],['C','oar','Row 2'],['C','ht','Glutes / hinge'],['C','cc','Core: cable crunch','reps'],['C','hkr','Core: knee raise','reps'],['C','sp','Core: side plank','seconds']
+  ];
+  var st = {}; try { st = JSON.parse(localStorage.getItem('zn_workout_v2')) || {}; } catch(e){}
+  var logs = st.logs || {}, practice = st.practice || {}, walks = st.walks || [];
+  function num(v){ v = parseFloat(v); return isNaN(v) ? null : v; }
+  function xOf(iso, wkKey){ var d = ZN.parseISO(iso); return d ? ZN.daysBetween(S, d) / 7 + 1 : wkKey; }
+  /* collect sessions: [{x, date, ex}] */
+  var sessions = [];
+  Object.keys(logs).forEach(function(k){ var l = logs[k], a = k.split('|'); sessions.push({x: xOf(l.date || l.doneAt, +a[0] + 'ABC'.indexOf(a[1]) * 0.28), date: l.date || l.doneAt || '', ex: l.ex || {}}); });
+  Object.keys(practice).forEach(function(k){ var l = practice[k]; if(l.date || l.doneAt) sessions.push({x: xOf(l.date || l.doneAt, 0), date: l.date || l.doneAt, ex: l.ex || {}, practice: true}); });
+  sessions.sort(function(a, b){ return a.x - b.x; });
+  var COLORS = ['#4aa3f5', '#f0b429', '#c792ea', '#f07178', '#3ecf8e'];
+  function seriesFor(id, unit){
+    var byV = {}, order = [];
+    sessions.forEach(function(s){
+      var e = s.ex[id]; if(!e || !e.sets) return;
+      var sets = e.sets.map(function(z){ return {w: num(z.w), r: num(z.r)}; }).filter(function(z){ return z.w != null || z.r != null; });
+      if(!sets.length) return;
+      var v = e.v || '(default)';
+      if(!byV[v]){ byV[v] = []; order.push(v); }
+      byV[v].push({x: s.x, date: s.date, sets: sets});
+    });
+    return order.map(function(v){
+      var pts = byV[v], weighted = pts.some(function(p){ return p.sets.some(function(z){ return z.w > 0; }); });
+      pts.forEach(function(p){
+        if(weighted){
+          var top = null, e1 = 0;
+          p.sets.forEach(function(z){ if(!(z.w > 0)) return; var r = z.r || 1; if(!top || z.w > top.w || (z.w === top.w && r > top.r)) top = {w: z.w, r: r}; e1 = Math.max(e1, z.w * (1 + r / 30)); });
+          p.a = top ? top.w : null; p.b = e1 || null; p.lbl = top ? top.w + '×' + top.r : '';
+        } else { p.a = Math.max.apply(null, p.sets.map(function(z){ return z.r || 0; })); p.b = null; p.lbl = String(p.a); }
+      });
+      pts = pts.filter(function(p){ return p.a != null; });
+      return {v: v, weighted: weighted, unit: weighted ? 'lb' : (unit || 'reps'), pts: pts};
+    }).filter(function(s){ return s.pts.length; });
+  }
+  /* generic SVG line chart. lines: [{pts:[{x,y}], color, dash}] */
+  function svg(lines, opt){
+    var W = 340, H = 190, L = 38, R = 10, T = 12, B = 34, pw = W - L - R, ph = H - T - B;
+    var xs = [], ys = [];
+    lines.forEach(function(l){ l.pts.forEach(function(p){ xs.push(p.x); ys.push(p.y); }); });
+    var x0 = Math.min(1, Math.floor(Math.min.apply(null, xs))), x1 = Math.max(x0 + 3, Math.ceil(Math.max.apply(null, xs) + 0.01));
+    if(opt.x1) x1 = Math.max(x1, opt.x1);
+    var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    if(opt.zero) lo = 0;
+    var pad = Math.max(2, (hi - lo) * 0.12); lo = Math.max(0, lo - (opt.zero ? 0 : pad)); hi = hi + pad;
+    var step = nice((hi - lo) / 4); lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+    var X = function(x){ return L + (x - x0) / (x1 - x0) * pw; }, Y = function(y){ return T + (hi - y) / (hi - lo) * ph; };
+    var g = '';
+    for(var v = lo; v <= hi + 1e-9; v += step) g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#2d3a4d"/><text x="' + (L - 4) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="11" fill="#a7b6c6">' + Math.round(v * 10) / 10 + '</text>';
+    var ws = Math.max(1, Math.ceil((x1 - x0) / 6));
+    for(var w = x0; w <= x1; w += ws) g += '<text x="' + X(w) + '" y="' + (T + ph + 15) + '" text-anchor="middle" font-size="11" fill="#a7b6c6">' + (w < 1 ? 'pre' : w) + '</text>';
+    g += '<text x="' + (L + pw / 2) + '" y="' + (H - 3) + '" text-anchor="middle" font-size="11.5" fill="#e8eef6">Program week</text>';
+    g += '<text transform="translate(10 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle" font-size="11.5" fill="#e8eef6">' + esc(opt.ylab) + '</text>';
+    lines.forEach(function(l){
+      if(l.pts.length > 1) g += '<polyline fill="none" stroke="' + l.color + '" stroke-width="' + (l.dash ? 2 : 3) + '"' + (l.dash ? ' stroke-dasharray="5 4"' : '') + ' stroke-linejoin="round" points="' + l.pts.map(function(p){ return X(p.x).toFixed(1) + ',' + Y(p.y).toFixed(1); }).join(' ') + '"/>';
+      if(!l.dash) g += l.pts.map(function(p){ return '<circle cx="' + X(p.x).toFixed(1) + '" cy="' + Y(p.y).toFixed(1) + '" r="4" fill="' + l.color + '" stroke="#0f1419" stroke-width="1.5"><title>' + esc(p.t || '') + '</title></circle>'; }).join('');
+    });
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opt.ylab) + ' over time">' + g + '</svg>';
+  }
+  function nice(x){ var p = Math.pow(10, Math.floor(Math.log10(x || 1))), m = x / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
+  function md(iso){ var d = ZN.parseISO(iso); return d ? ZN.fmt(d, {month:'short', day:'numeric'}) : ''; }
+  function r1(x){ return Math.round(x * 10) / 10; }
+  function card(ex){
+    var ser = seriesFor(ex[1], ex[3]); if(!ser.length) return '';
+    var lines = [], legend = '', stats = '', ylab = ser.every(function(s){ return s.weighted; }) ? 'Weight (lb)' : ser.every(function(s){ return !s.weighted; }) ? ser[0].unit[0].toUpperCase() + ser[0].unit.slice(1) : 'Value';
+    ser.forEach(function(s, i){
+      var c = COLORS[i % COLORS.length];
+      lines.push({color: c, pts: s.pts.map(function(p){ return {x: p.x, y: p.a, t: s.v + ' ' + md(p.date) + ': ' + p.lbl + (s.weighted ? ' lb' : ' ' + s.unit)}; })});
+      if(s.weighted) lines.push({color: c, dash: true, pts: s.pts.map(function(p){ return {x: p.x, y: p.b}; })});
+      legend += '<span><i style="border-color:' + c + '"></i>' + esc(s.v) + (s.weighted ? ' top set' : ' (' + s.unit + ')') + '</span>' + (s.weighted ? '<span><i class="d" style="border-color:' + c + '"></i>est. 1RM</span>' : '');
+      var first = s.pts[0], last = s.pts[s.pts.length - 1], key = s.weighted ? 'b' : 'a';
+      var best = s.pts.reduce(function(m, p){ return p[key] > m[key] ? p : m; }, first), u = s.weighted ? ' lb' : ' ' + s.unit;
+      var ch = r1(last[key] - first[key]);
+      stats += (ser.length > 1 ? '<div class="vname" style="color:' + c + '">' + esc(s.v) + '</div>' : '') + '<div class="st">' +
+        '<div><b>' + esc(last.lbl) + '</b><span>Latest (' + md(last.date) + ')' + (s.weighted ? '<br>e1RM ' + Math.round(last.b) : '') + '</span></div>' +
+        '<div><b>' + (s.weighted ? Math.round(best.b) : esc(best.lbl)) + '</b><span>Best ' + (s.weighted ? 'e1RM' : s.unit) + '<br>' + md(best.date) + '</span></div>' +
+        '<div><b style="color:' + (ch > 0 ? 'var(--good)' : ch < 0 ? 'var(--danger)' : 'inherit') + '">' + (ch > 0 ? '+' : '') + (s.weighted ? Math.round(ch) : ch) + '</b><span>Change since<br>first (' + s.pts.length + ' session' + (s.pts.length === 1 ? '' : 's') + ')</span></div></div>';
+    });
+    return '<div class="card lift"><h3>' + esc(ex[2]) + '</h3>' + svg(lines, {ylab: ylab}) + '<div class="legend">' + legend + '</div>' + stats + '</div>';
+  }
+  function cardio(){
+    var wk = {};
+    Object.keys(logs).forEach(function(k){ var l = logs[k], w = +k.split('|')[0], m = num(l.cardio && l.cardio.min); if(m) wk[w] = (wk[w] || 0) + m; });
+    var fin = Object.assign({}, wk), wm = {};
+    walks.forEach(function(x){ var d = ZN.parseISO(x.date), m = num(x.min); if(!d || !m) return; var w = ZN.weekOf(d, prof); if(w < 1 || w > 13) return; wk[w] = (wk[w] || 0) + m; wm[w] = (wm[w] || 0) + m; });
+    var ws = Object.keys(wk).map(Number).sort(function(a, b){ return a - b; });
+    if(!ws.length) return '';
+    var pts = []; for(var w = 1; w <= Math.max(ws[ws.length - 1], 1); w++) pts.push({x: w, y: wk[w] || 0, t: 'Week ' + w + ': ' + (wk[w] || 0) + ' min (finishers ' + (fin[w] || 0) + ', walks ' + (wm[w] || 0) + ')'});
+    var cur = ZN.clampWeek(ZN.weekOf(new Date(), prof)), tot = ws.reduce(function(s, w){ return s + wk[w]; }, 0);
+    return '<div class="card lift"><h3>Weekly cardio minutes</h3><p class="muted small" style="margin:2px 0 0">Finishers + walks combined</p>' + svg([{color:'#3ecf8e', pts: pts}], {ylab:'Minutes', zero:true}) +
+      '<div class="st"><div><b>' + (wk[cur] || 0) + '</b><span>This week<br>(' + (fin[cur] || 0) + ' fin + ' + (wm[cur] || 0) + ' walk)</span></div><div><b>' + Math.max.apply(null, ws.map(function(w){ return wk[w]; })) + '</b><span>Best week</span></div><div><b>' + Math.round(tot / ws.length) + '</b><span>Avg / active week</span></div></div></div>';
+  }
+  var html = '';
+  ['A','B','C'].forEach(function(d){ var c = EX.filter(function(e){ return e[0] === d; }).map(card).join(''); if(c) html += '<h2>' + DAYS[d] + '</h2>' + c; });
+  var cc = cardio(); if(cc) html += '<h2>Cardio</h2>' + cc;
+  document.getElementById('out').innerHTML = html || '<div class="card empty"><div class="big">📈</div><h2 style="border:0">No lifts logged yet</h2><p class="muted">Log a session on the Workout page and your graphs show up here: one per exercise, plus weekly cardio.</p><div class="toolbar"><a class="btn" href="workout-program.html" style="text-decoration:none;display:flex;justify-content:center;width:100%">Go to today’s workout</a></div></div>';
+})();
+</script>
+</body>
+</html>
