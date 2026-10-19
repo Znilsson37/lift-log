@@ -97,10 +97,9 @@ a.tile span{display:block;font-weight:400;font-size:.9rem;color:var(--muted);mar
 <div class="wrap home">
   <h1>Lift Log</h1>
   <div class="status" id="status"></div>
-  <a class="logfood" href="cut-plan.html#food">🍽&nbsp;Log food</a>
+  <a class="logfood" href="cut-plan.html">⚖️&nbsp;Weekly weigh-in</a>
   <a class="tile" href="workout-program.html">🏋️ Today’s workout<span id="woSub">Follow the program and log sets</span></a>
-  <a class="tile" href="cut-plan.html">⚖️ Cut plan &amp; weigh-ins<span>Daily totals, weekly check-in, targets, progress</span></a>
-  <a class="tile" href="supplements.html">💊 Supplements<span>Daily checklist and product info</span></a>
+    <a class="tile" href="supplements.html">💊 Supplements<span>Daily checklist and product info</span></a>
   <a class="tile" href="trt-cut-structure.html">🩺 TRT &amp; the cut<span>Notes for your doctor visits</span></a>
   <p class="muted small">Everything saves on this phone (no account). Export backups from the Cut plan and Workout pages now and then. Not medical advice; review with your physician.</p>
 </div>
@@ -209,16 +208,14 @@ var ZN = (function(){
   var n = ZN.daysUntilStart(p), w = ZN.weekOf(new Date(), p), sd = ZN.parseISO(p.start);
   var phase = function(w){ return w <= 2 ? 'Ramp-in' : w <= 5 ? 'Base' : w <= 8 ? 'Build' : w <= 11 ? 'Intensify' : 'Deload + review'; };
   var head, sub;
-  if(n > 0){ head = 'Program starts ' + ZN.fmt(sd); sub = 'In ' + n + ' day' + (n === 1 ? '' : 's') + ' · Week 12 ends ' + ZN.fmt(ZN.programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '. Start logging food now to practice.'; $('woSub').textContent = 'Preview Week 1 · Day A'; }
+  if(n > 0){ head = 'Program starts ' + ZN.fmt(sd); sub = 'In ' + n + ' day' + (n === 1 ? '' : 's') + ' · Week 12 ends ' + ZN.fmt(ZN.programEnd(p), {month:'short', day:'numeric', year:'numeric'}) + '. '; $('woSub').textContent = 'Preview Week 1 · Day A'; }
   else if(w <= 12){ head = 'Week ' + w + ' of 12 · ' + phase(w); sub = ZN.fmt(new Date(), {weekday:'long', month:'short', day:'numeric'}); }
   else { head = 'Phase 1 complete 🎉'; sub = 'Plan your diet break and Phase 2 with your MD.'; }
-  var t = null, eaten = 0;
-  try { var cut = JSON.parse(localStorage.getItem('zn_cut_v2') || '{}'); t = cut.targets; } catch(e){}
-  if(!t){ var tt = ZN.targets(p); t = {cal:tt.cal, p:tt.p}; }
-  try { var food = JSON.parse(localStorage.getItem('zn_food_v1') || '{}'); (food.entries && food.entries[ZN.iso(new Date())] || []).forEach(function(e){ eaten += +e.kcal || 0; }); } catch(e){}
-  var rem = Math.round(t.cal - eaten);
+  var es = []; try { es = (JSON.parse(localStorage.getItem('zn_weighins_v1') || '{}').entries || []).slice().sort(function(a, b){ return a.date < b.date ? -1 : 1; }); } catch(e){}
+  var last = es[es.length - 1], first = es[0];
+  var mon = ZN.iso(ZN.mondayOf(new Date())), done = es.some(function(e){ return e.date >= mon; });
   $('status').innerHTML = '<div class="big">' + head + '</div><div class="muted small">' + sub + '</div>' +
-    '<div class="small" style="margin-top:8px">Today: <b>' + Math.round(eaten) + '</b> / ' + t.cal + ' kcal · ' + (rem >= 0 ? rem + ' left' : (-rem) + ' over') + '</div><div class="pbar"><i class="' + (rem < 0 ? 'over' : '') + '" style="width:' + Math.min(100, eaten / t.cal * 100) + '%"></i></div>';
+    '<div class="small" style="margin-top:8px">' + (last ? 'Latest: <b>' + last.weight + ' lb</b> (' + ZN.fmt(ZN.parseISO(last.date), {month:'short', day:'numeric'}) + ')' + (first && first !== last ? ' · down ' + Math.round((first.weight - last.weight) * 10) / 10 + ' lb' : '') : 'No weigh-ins yet.') + (done ? ' · ✓ this week logged' : ' · this week’s weigh-in not logged yet') + '</div>';
 })();
 </script>
 </body>
